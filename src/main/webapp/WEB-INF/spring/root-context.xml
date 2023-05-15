@@ -1,8 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- 데이터베이스 연결정보 및 관련설정 작업 -->
+	
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+	<!-- 서버 배포용. 개발 끝난 후 서버에 올릴 떄는 이부분 주석을 풀고 아래의 log4jdbc를 주석 건다. -->
+	<!-- 
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1512:xe" />
+	 -->
+	 
+	 	<!-- log4jdbc 라이브러리를 사용하기 위한 구문 -->
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" /> 
+	    <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
+	    
+		<property name="username" value="joripcom" />
+		<property name="password" value="1234"></property>
+	</bean>
+	<!-- HikariDataSource의 조상 -> HikariDataSource extends HikariConfig implements DataSource -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+	
+	<!-- mapper xml 파일의 sql 구문을 동작시키는 기능 -->
+	<bean id="sqlSessionFacory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- com.demo.service패키지를 찾아가서, @Service 어노테이션이 적용된 클래스를 bean으로 생성한다. -->
+	<context:component-scan base-package="com.joripcom.service" />
+	
+	<!-- com.demo.mapper패키지에서 해당 인터페이스를 구현한 내부적으로 동작하는 프록시 클래스가 bean으로 생성한다. -->
+	<mybatis-spring:scan base-package="com.joripcom.mapper"/>
 		
 </beans>

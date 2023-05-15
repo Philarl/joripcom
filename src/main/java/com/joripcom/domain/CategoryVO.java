@@ -1,0 +1,14 @@
+package com.joripcom.domain;
+
+public class CategoryVO {
+	/*
+	CREATE TABLE CATEG_TBL(
+	    CATEG_CD        NUMBER          CONSTRAINT PK_CATEG_CD PRIMARY KEY,
+	    PAR_CATEG_CD    NUMBER,
+	    CATEG_NAME      VARCHAR2(50)    NOT NULL
+	);
+	ALTER TABLE CATEG_TBL
+	ADD FOREIGN KEY(PAR_CATEG_CD) REFERENCES CATEG_TBL (CATEG_CD);
+	*/
+
+}

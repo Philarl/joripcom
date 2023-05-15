@@ -1,0 +1,15 @@
+package com.joripcom.domain;
+
+public class BoardVO {
+	/*
+	CREATE TABLE BRD_TBL (
+	    BRD_NO_SEQ NUMBER           CONSTRAINT PK_BRD_NO_SEQ PRIMARY KEY,
+	    U_ID        VARCHAR2(20),
+	    BRD_TITLE  VARCHAR2(100)   NOT NULL,
+	    BRD_CONTENT   VARCHAR2(4000)  NOT NULL,
+	    WRITE_DATE  DATE            DEFAULT SYSDATE NOT NULL,
+	    FOREIGN KEY (U_ID) REFERENCES U_TBL (U_ID)
+	);
+	*/
+
+}
