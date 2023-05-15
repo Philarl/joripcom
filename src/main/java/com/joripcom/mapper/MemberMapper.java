@@ -4,6 +4,8 @@ import com.joripcom.domain.MemberVO;
 
 public interface MemberMapper {
 	
+	String idCheck(String u_id);
+	
 	void join(MemberVO vo);
 
 }

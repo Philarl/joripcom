@@ -15,6 +15,7 @@ public class MemberVO {
 	    U_ID            VARCHAR2(15)            CONSTRAINT PK_U_ID PRIMARY KEY,
 	    U_NAME          VARCHAR2(30)            NOT NULL,
 	    U_PW            VARCHAR2(15)            NOT NULL,
+    	U_EMAIL         VARCHAR2(50) UNIQUE     NOT NULL,
 	    U_ZIPCODE       CHAR(5)                 NOT NULL,
 	    U_ADDR          VARCHAR2(50)            NOT NULL,
 	    U_ADDR_DTL      VARCHAR2(50)            NOT NULL,
@@ -32,6 +33,7 @@ public class MemberVO {
 	private String u_id;
 	private String u_name;
 	private String u_pw;
+	private String u_email;
 	private String u_zipcode;
 	private String u_addr;
 	private String u_addr_dtl;
