@@ -66,7 +66,7 @@
         <div class="col-md-12">
         	<div class="card card-info">
 	          <div class="card-header">
-	            <h3 class="card-title">Horizontal Form</h3>
+	            <h3 class="card-title">로그인</h3>
 	          </div>
 	          <!-- /.card-header -->
 	          <!-- form start -->
@@ -75,21 +75,13 @@
 	              <div class="form-group row">
 	                <label for="u_id" class="col-sm-2 col-form-label">아이디</label>
 	                <div class="col-sm-10">
-	                  <input type="text" class="form-control" id="u_id">
+	                  <input type="text" class="form-control" name="u_id" id="u_id">
 	                </div>
 	              </div>
 	              <div class="form-group row">
 	                <label for="u_pw" class="col-sm-2 col-form-label">비밀번호</label>
 	                <div class="col-sm-10">
-	                  <input type="password" class="form-control" id="u_pw">
-	                </div>
-	              </div>
-	              <div class="form-group row">
-	                <div class="offset-sm-2 col-sm-10">
-	                  <div class="form-check">
-	                    <input type="checkbox" class="form-check-input" id="exampleCheck2">
-	                    <label class="form-check-label" for="exampleCheck2">Remember me</label>
-	                  </div>
+	                  <input type="password" class="form-control" name="u_pw" id="u_pw">
 	                </div>
 	              </div>
 	            </div>
@@ -114,11 +106,17 @@
 <!-- config -->
 <%@include file="/WEB-INF/views/include/config.jsp" %>
 <script>
+	$(document).ready(function() {
+		let msg = '${msg}';
 
-  $(document).ready(function() {
-
-  });
-
+		if(msg == 'failID') {
+			alert("아이디를 확인하세요");
+			$("#u_id").focus();
+		}else if(msg == 'failPW') {
+			alert("비밀번호를 확인하세요");
+			$("#u_pw").focus();
+		}
+	});
 </script>
   </body>
 </html>

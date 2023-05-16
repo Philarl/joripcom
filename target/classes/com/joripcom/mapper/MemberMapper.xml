@@ -12,4 +12,60 @@
 		insert into u_tbl (u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx)
 		values (#{u_id}, #{u_name}, #{u_pw}, #{u_email}, #{u_zipcode}, #{u_addr}, #{u_addr_dtl}, #{u_phone}, #{u_nic}, #{check_email_rx})
 	</insert>
+	
+	<select id="login" resultType="com.joripcom.domain.MemberVO">
+		select u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts, join_date, modify_date, last_login_date
+		from u_tbl
+		where u_id = #{u_id}
+	</select>
+	
+	<update id="now_visit">
+		update u_tbl
+		set
+			last_login_date = sysdate
+		where u_id = #{u_id}
+	</update>
+	
+	<update id="modify">
+		update u_tbl
+		set
+			u_name = #{u_name},
+			u_email = #{u_email},
+			u_zipcode = #{u_zipcode},
+			u_addr = #{u_addr},
+			u_addr_dtl = #{u_addr_dtl},
+			u_phone = #{u_phone},
+			u_nic = #{u_nic},
+			check_email_rx = #{check_email_rx}
+		where u_id = #{u_id}
+	</update>
+	
+	<update id="pwchange">
+		update u_tbl
+		set
+			u_pw = #{new_u_pw}
+		where u_id = #{u_id}
+	</update>
+	
+	<delete id="delete">
+		delete from u_tbl
+		where u_id = #{u_id}
+	</delete>
+	
+	<select id="findID" resultType="string">
+		select u_id from u_tbl where u_email = #{u_email}
+	</select>
+	
+	<select id="findPW" resultType="com.joripcom.domain.MemberVO">
+		select u_id, u_pw, u_email
+		from u_tbl
+		where u_id = #{u_id}
+	</select>
+	
+	<update id="tempPW">
+	update u_tbl
+	set
+		u_pw = #{new_u_pw}
+	where u_id = #{u_id}
+	</update>
 </mapper>
