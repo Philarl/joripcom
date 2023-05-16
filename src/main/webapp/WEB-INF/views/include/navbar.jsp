@@ -37,8 +37,8 @@
       <div class="modal-body">
         <div class="row">
             <div class="col-md-12 mb-3">
-              <label for="u_email">이메일</label>
-              <input type="text" class="form-control" name="u_email" id="u_email" placeholder="가입할 때 사용한 이메일을 입력해주세요.">
+              <label for="check_u_email">이메일</label>
+              <input type="text" class="form-control" name="check_u_email" id="check_u_email" placeholder="가입할 때 사용한 이메일을 입력해주세요.">
             </div>
           </div>
       </div>
@@ -62,8 +62,8 @@
 		<div class="modal-body">
 		  <div class="row">
 			  <div class="col-md-12 mb-3">
-				<label for="u_id">아이디</label>
-				<input type="text" class="form-control" name="u_id" id="u_id" placeholder="가입할 때 사용한 아이디를 입력해주세요.">
+				<label for="check_u_id">아이디</label>
+				<input type="text" class="form-control" name="check_u_id" id="check_u_id" placeholder="가입할 때 사용한 아이디를 입력해주세요.">
 			  </div>
 			</div>
 		</div>
@@ -80,16 +80,16 @@
 	$(document).ready(function() {
 		$("#btn_findID").on("click", function() {
 
-			if($("#u_email").val() == "") {
+			if($("#check_u_email").val() == "") {
 				alert("이메일을 입력하세요.");
-				$("#u_email").focus();
+				$("#check_u_email").focus();
 				return;
 			}
 
 			$.ajax({
 				url: '/member/findID',
 				type: 'post',
-				data: {u_email : $("#u_email").val(), receiverMail : $("#u_email").val()},
+				data: {u_email : $("#check_u_email").val(), receiverMail : $("#check_u_email").val()},
         dataType: 'text',
         success: function(result) {
           if(result == "emailOff") {
@@ -105,16 +105,16 @@
 
 		$("#btn_findPW").on("click", function() {
 
-			if($("#u_id").val() == "") {
+			if($("#check_u_id").val() == "") {
 				alert("아이디를 입력하세요.");
-				$("#u_id").focus();
+				$("#check_u_id").focus();
 				return;
 			}
 
 			$.ajax({
 				url: '/member/findPW',
 				type: 'post',
-				data: {u_id : $("#u_id").val()},
+				data: {u_id : $("#check_u_id").val()},
         dataType: 'text',
         success: function(result) {
           if(result == "idOff") {
