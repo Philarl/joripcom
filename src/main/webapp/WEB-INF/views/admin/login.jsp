@@ -53,13 +53,13 @@
   </head>
   <body class="text-center">
     
-<form class="form-signin">
+<form class="form-signin" method="post" action="/admin/login">
   <img class="mb-4" src="https://getbootstrap.com/docs/4.6/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
   <h1 class="h3 mb-3 font-weight-normal">관리자</h1>
   <label for="u_id" class="sr-only">아이디</label>
-  <input type="text" id="u_id" class="form-control" placeholder="Email address" required autofocus>
+  <input type="text" name="u_id" id="u_id" class="form-control" required autofocus>
   <label for="u_pw" class="sr-only">비밀번호</label>
-  <input type="password" id="u_pw" class="form-control" required>
+  <input type="password" name="u_pw" id="u_pw" class="form-control" required>
   <button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
   <p class="mt-5 mb-3 text-muted">&copy; 2017-2022</p>
 </form>

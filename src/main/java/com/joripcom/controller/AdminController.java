@@ -23,13 +23,12 @@ public class AdminController {
 	
 	@Setter(onMethod_ = {@Autowired})
 	private AdminService adminService;
-	
 	@Setter(onMethod_ = {@Autowired})
 	private PasswordEncoder passwordEncoder;
 	
-	@GetMapping("/login")
-	public void login() {
-		
+	@GetMapping("")
+	public String login() {
+		return "/admin/login";
 	}
 	
 	@PostMapping("/login")
@@ -58,6 +57,17 @@ public class AdminController {
 		rttr.addFlashAttribute("msg", msg);
 		
 		return "redirect:" + url;
+	}
+	
+	@GetMapping("/admin_menu")
+	public void admin_menu() {
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		
+		return "redirect:/admin/";
 	}
 
 }

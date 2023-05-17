@@ -1,5 +1,12 @@
 package com.joripcom.domain;
 
+import lombok.Getter;
+import lombok.ToString;
+import lombok.Setter;
+
+@Getter
+@Setter
+@ToString
 public class CategoryVO {
 	/*
 	CREATE TABLE CATEG_TBL(
@@ -10,5 +17,9 @@ public class CategoryVO {
 	ALTER TABLE CATEG_TBL
 	ADD FOREIGN KEY(PAR_CATEG_CD) REFERENCES CATEG_TBL (CATEG_CD);
 	*/
+	
+	private Integer categ_cd;
+	private Integer par_categ_cd;
+	private String categ_name;
 
 }

@@ -6,6 +6,6 @@
 <select id="login" resultType="com.joripcom.domain.MemberVO">
 	select u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts, join_date, modify_date, last_login_date
 	from u_tbl
-	where u_id = #{u_id} and u_grade = '9'
+	where u_id = #{u_id} and u_grade = 9
 </select>
 </mapper>

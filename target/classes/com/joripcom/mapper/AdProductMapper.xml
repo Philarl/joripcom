@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joripcom.mapper.AdProductMapper">
+	
+	<select id="getCategoryList" resultType="com.joripcom.domain.CategoryVO">
+		select categ_cd, par_categ_cd, categ_name from categ_tbl where par_categ_cd is NULL
+	</select>
+	
+	<select id="subCategoryList" resultType="com.joripcom.domain.CategoryVO">
+		select categ_cd, par_categ_cd, categ_name from categ_tbl where par_categ_cd = #{categ_cd}
+	</select>
+	
+	<insert id="pro_insert">
+		insert into p_tbl
+			(p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date)
+		values
+			(seq_p_no.nextval, #{categ_cd}, #{p_name}, #{p_px}, #{p_dc}, #{p_mfr}, #{p_dtl}, #{p_up_folder}, #{p_img}, #{p_amt}, #{p_purchasable}, sysdate, sysdate)
+	</insert>
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR"> <!-- trim 태그 sql 구문 중에 맨앞에 OR가 존재하면 제거 -->
+			<foreach collection="typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">p_name like '%' || #{keyword} || '%'</when>
+						<when test="type == 'P'.toString()">p_mfr like '%' || #{keyword} || '%'</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="getListWithPaging" resultType="com.joripcom.domain.ProductVO">
+		SELECT RN, p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+		FROM (
+				SELECT /*+INDEX_DESC(p_tbl pk_p_no) */
+						ROWNUM RN, p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+				FROM p_tbl
+				WHERE
+					<include refid="criteria" />
+		<![CDATA[		
+					ROWNUM <= #{pageNum} * #{amount}
+			)
+		WHERE RN > (#{pageNum}-1) * #{amount}
+		]]>
+		
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from p_tbl
+		where
+			<include refid="criteria" /> 
+			p_no > 0
+	</select>
+	
+	<select id="get" resultType="com.joripcom.domain.CategoryVO">
+	select categ_cd, par_categ_cd, categ_name
+	from categ_tbl
+	where categ_cd = (select par_categ_cd from categ_tbl where categ_cd = #{categ_cd})
+	</select>
+	
+</mapper>
