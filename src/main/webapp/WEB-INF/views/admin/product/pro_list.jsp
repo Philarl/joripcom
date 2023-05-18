@@ -112,12 +112,34 @@
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
       <section class="content container-fluid">
-
+        <div class="nav-scroller py-1 mb-2">
+          <nav class="navbar-nav d-flex justify-content-between">
+            <div>
+              <form id="categoryForm" action="/admin/product/pro_list" method="get">
+                <span>카테고리별 상품 : </span>
+                <select name="firstCategory" id="firstCategory">
+                  <option value="">1차 카테고리 선택</option>
+                  <c:forEach items="${categoryList }" var="category">
+                    <option value="${category.categ_cd }">${category.categ_name }</option>
+                  </c:forEach>
+                </select>			    	
+                <select name="secondCategory" id="secondCategory">
+                  <option>2차 카테고리 선택</option>
+                </select>
+                <input type="hidden" name="pageNum" value="1">
+                <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+                <button type="submit">검색</button>
+              </form>
+            </div>
+          </nav>
+        </div>
         <!--------------------------
           | Your Page Content Here |
           -------------------------->
          
           <div class="row">
+            
+            
             <div class="col-md-12">
             
               <div class="box">
@@ -133,7 +155,7 @@
                       <input type="text" name="keyword" placeholder="검색어를 입력하세요." value='<c:out value="${pageMaker.cri.keyword }" />'>
                       <input type="hidden" name="pageNum" value="1">
                       <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-                      <button type="submit"  class="btn btn-success">Search</button>&nbsp;
+                      <button type="submit" class="btn btn-success">Search</button>&nbsp;
                       <button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
                     </div>
                     <div class="col-md-4">
@@ -145,7 +167,7 @@
               </div>
               <!-- /.box-header -->
               <div class="box-body">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="productList">
                   <tbody><tr>
                     <th style="width: 2%"><input type="checkbox" id="checkAll"></th>
                     <th style="width: 55%">상품명</th>
@@ -359,6 +381,30 @@
 
       }
     }
+    });
+  });
+
+  $("#firstCategory").change(function() {
+
+    let categ_cd = $(this).val();
+
+    let url = "/admin/product/subCategory/" + categ_cd + ".json";
+
+    console.log(productList);
+
+    $.getJSON(url, function(subCategoryData){
+
+      let optionStr = "";
+      let secondCategory = $("#secondCategory");
+
+      secondCategory.find("option").remove();
+      secondCategory.append("<option value=''>2차 카테고리 선택</option");
+
+      for(let i=0; i<subCategoryData.length; i++) {
+        optionStr += "<option value='" + subCategoryData[i].categ_cd + "'>" + subCategoryData[i].categ_name + "</option>";
+      }
+
+      secondCategory.append(optionStr);
     });
   });
 

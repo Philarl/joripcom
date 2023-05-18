@@ -14,7 +14,7 @@ public interface AdProductService {
 	
 	void pro_insert(ProductVO vo);
 	
-	List<ProductVO> getListWithPaging(Criteria cri);
+	List<ProductVO> getListWithPaging(Criteria cri, CategoryVO categ);
 	
 	int getTotalCount(Criteria cri);
 

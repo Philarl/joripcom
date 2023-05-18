@@ -117,6 +117,27 @@ CREATE SEQUENCE SEQ_P_NO;
 p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
 */
 
+-- 1차 카테고리 선택시 상품 출력
+SELECT p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+FROM p_tbl
+WHERE CATEG_CD IN (SELECT CATEG_CD FROM CATEG_TBL WHERE PAR_CATEG_CD = 1);
+
+-- 2차 카테고리 선택시 상품 출력
+SELECT p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+FROM p_tbl
+WHERE CATEG_CD = 101;
+
+SELECT RN, p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+		FROM (
+				SELECT /*+INDEX_DESC(p_tbl pk_p_no) */
+						ROWNUM RN, p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+				FROM p_tbl
+				WHERE 
+					categ_cd in (SELECT categ_cd FROM categ_tbl WHERE par_categ_cd = 1) and
+					ROWNUM <= 1 * 10
+			)
+		WHERE RN > 0 * 10;
+
 -- 상품 이미지 테이블
 DROP TABLE PIMG_TBL CASCADE CONSTRAINTS;
 CREATE TABLE PIMG_TBL(

@@ -37,9 +37,9 @@ public class AdProductServiceImpl implements AdProductService {
 	}
 
 	@Override
-	public List<ProductVO> getListWithPaging(Criteria cri) {
+	public List<ProductVO> getListWithPaging(Criteria cri, CategoryVO categ) {
 		
-		return adProductMapper.getListWithPaging(cri);
+		return adProductMapper.getListWithPaging(cri, categ);
 	}
 
 	@Override

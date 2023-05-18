@@ -147,9 +147,12 @@ public class AdProductController {
 	}
 	
 	@GetMapping("/pro_list")
-	public void pro_list(@ModelAttribute("cri") Criteria cri, Model model) {
+	public void pro_list(@ModelAttribute("cri") Criteria cri, CategoryVO categ, Model model) {
 		
-		List<ProductVO> pro_list = adProductService.getListWithPaging(cri);
+		List<ProductVO> pro_list = adProductService.getListWithPaging(cri, categ);
+		log.info(categ.getFirstCategory());
+		log.info(categ.getSecondCategory());
+		
 		
 //		log.info("폴더경로: " + pro_list.get(0).getP_up_folder());
 		
@@ -157,7 +160,7 @@ public class AdProductController {
 			vo.setP_up_folder(vo.getP_up_folder().replace("\\", "/"));
 		});
 		
-		log.info("폴더경로: " + pro_list.get(0).getP_up_folder());
+//		log.info("폴더경로: " + pro_list.get(0).getP_up_folder());
 		
 		model.addAttribute("pro_list", pro_list);
 		
@@ -165,6 +168,7 @@ public class AdProductController {
 		
 		PageDTO pageDTO = new PageDTO(total, cri);
 		model.addAttribute("pageMaker", pageDTO);
+		model.addAttribute("categoryList", adProductService.getCategoryList());
 		
 	}
 	

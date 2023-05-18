@@ -21,5 +21,8 @@ public class CategoryVO {
 	private Integer categ_cd;
 	private Integer par_categ_cd;
 	private String categ_name;
+	
+	private Integer firstCategory;
+	private Integer secondCategory;
 
 }
