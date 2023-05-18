@@ -48,4 +48,40 @@ public class AdProductServiceImpl implements AdProductService {
 		return adProductMapper.getTotalCount(cri);
 	}
 
+	@Override
+	public CategoryVO get_category(Integer categ_cd) {
+		
+		return adProductMapper.get_category(categ_cd);
+	}
+
+	@Override
+	public ProductVO get_modify(Integer p_no) {
+		
+		return adProductMapper.get_modify(p_no);
+	}
+
+	@Override
+	public void pro_modify(ProductVO vo) {
+		adProductMapper.pro_modify(vo);
+		
+	}
+
+	@Override
+	public void pro_delete(Integer p_no) {
+		adProductMapper.pro_delete(p_no);
+		
+	}
+
+	@Override
+	public void pro_checked_modify(List<ProductVO> pro_list) {
+		adProductMapper.pro_checked_modify(pro_list);
+		
+	}
+
+	@Override
+	public void pro_checked_delete(List<Integer> p_no_arr) {
+		adProductMapper.pro_checked_delete(p_no_arr);
+		
+	}
+
 }

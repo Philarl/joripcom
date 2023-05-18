@@ -25,7 +25,7 @@ public class EmailServiceImpl implements EmailService {
 		MimeMessage msg = mailSender.createMimeMessage();
 		
 		try {
-			msg.addRecipient(RecipientType.TO, new InternetAddress(dto.getReceiverMail()));
+			msg.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(dto.getReceiverMail()));
 			msg.addFrom(new InternetAddress[] {new InternetAddress(dto.getSenderMail(), dto.getSenderName())});
 			msg.setSubject(dto.getSubject(), "utf-8");
 			msg.setText(message, "utf-8");

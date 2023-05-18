@@ -378,6 +378,20 @@ SELECT * FROM product_tbl WHERE CAT_CODE = 8;
 */
 SELECT * FROM product_tbl WHERE PRO_NUM = 1;
 
+-- 선택상품삭제
+DELETE product_tbl
+WHERE pro_num in (4, 2);
+
+-- 선택상품수정
+DECLARE
+BEGIN
+UPDATE product_tbl
+SET pro_price = 10000, pro_buy = 'Y'
+WHERE pro_num = 4;
+UPDATE product_tbl
+SET pro_price = 50000, pro_buy = 'N'
+WHERE pro_num = 2;
+END;
 
 --4.장바구니 테이블
 CREATE TABLE CART_TBL(

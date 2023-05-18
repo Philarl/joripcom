@@ -55,10 +55,57 @@
 			p_no > 0
 	</select>
 	
-	<select id="get" resultType="com.joripcom.domain.CategoryVO">
-	select categ_cd, par_categ_cd, categ_name
-	from categ_tbl
-	where categ_cd = (select par_categ_cd from categ_tbl where categ_cd = #{categ_cd})
+	<select id="get_category" resultType="com.joripcom.domain.CategoryVO">
+		select categ_cd, par_categ_cd, categ_name
+		from categ_tbl
+		where categ_cd = (select par_categ_cd from categ_tbl where categ_cd = #{categ_cd})
 	</select>
+	
+	<select id="get_modify" resultType="com.joripcom.domain.ProductVO">
+		SELECT p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+		from p_tbl
+		where p_no = #{p_no}
+	</select>
+	
+	<update id="pro_modify">
+		update p_tbl
+		set
+			categ_cd = #{categ_cd},
+			p_name = #{p_name},
+			p_px = #{p_px},
+			p_dc = #{p_dc},
+			p_mfr = #{p_mfr},
+			p_dtl = #{p_dtl},
+			p_up_folder = #{p_up_folder},
+			p_img = #{p_img},
+			p_amt = #{p_amt},
+			p_purchasable = #{p_purchasable},
+			modify_date = sysdate
+		where p_no = #{p_no}
+	</update>
+	
+	<delete id="pro_delete">
+		delete p_tbl
+		where p_no = #{p_no}
+	</delete>
+	
+	<update id="pro_checked_modify">
+		<foreach collection="list" item="item" open="declare begin" separator=";" close="; end;">
+			update p_tbl
+			set
+				p_px = #{item.p_px},
+				p_purchasable = #{item.p_purchasable},
+				modify_date = sysdate
+			where p_no = #{item.p_no}
+		</foreach>
+	</update>
+	
+	<delete id="pro_checked_delete">
+		delete from p_tbl
+		where p_no in
+		<foreach collection="list" item="p_no" open="(" separator="," close=")">
+			#{p_no}
+		</foreach>
+	</delete>
 	
 </mapper>

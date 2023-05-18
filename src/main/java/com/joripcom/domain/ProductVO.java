@@ -1,6 +1,5 @@
 package com.joripcom.domain;
 
-import java.sql.Clob;
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;

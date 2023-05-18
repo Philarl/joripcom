@@ -18,4 +18,16 @@ public interface AdProductService {
 	
 	int getTotalCount(Criteria cri);
 
+	CategoryVO get_category(Integer categ_cd);
+	
+	ProductVO get_modify(Integer p_no);
+
+	void pro_modify(ProductVO vo);
+
+	void pro_delete(Integer p_no);
+
+	void pro_checked_modify(List<ProductVO> pro_list);
+
+	void pro_checked_delete(List<Integer> p_no_arr);
+
 }

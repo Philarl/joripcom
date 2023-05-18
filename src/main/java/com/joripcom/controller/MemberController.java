@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -127,7 +126,7 @@ public class MemberController {
 		String msg = "";
 		
 		String u_id = ((MemberVO) session.getAttribute("loginStatus")).getU_id();
-		String db_u_pw = ((MemberVO) memberService.login(u_id)).getU_pw();
+		String db_u_pw = memberService.login(u_id).getU_pw();
 		
 		if(passwordEncoder.matches(vo.getU_pw(), db_u_pw)) {
 			memberService.modify(vo);
@@ -153,7 +152,7 @@ public class MemberController {
 		MemberVO vo = (MemberVO) session.getAttribute("loginStatus");
 		
 		String u_id = vo.getU_id();
-		String db_u_pw = ((MemberVO) memberService.login(u_id)).getU_pw();
+		String db_u_pw = memberService.login(u_id).getU_pw();
 		
 		if(passwordEncoder.matches(old_u_pw, db_u_pw) ) {
 			String enc_u_pw = passwordEncoder.encode(new_u_pw);
@@ -231,7 +230,7 @@ public class MemberController {
 		String new_u_pw = passwordEncoder.encode(tempPW);
 		model.addAttribute("new_u_pw", new_u_pw);
 		
-		String u_email = ((MemberVO) memberService.findPW(vo.getU_id())).getU_email();
+		String u_email = memberService.findPW(vo.getU_id()).getU_email();
 		dto.setReceiverMail(u_email);
 		
 		log.info("아이디: " + u_id + ", 이메일: " + u_email);
