@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.dto.CategoryDTO;
 import com.joripcom.mapper.AdProductMapper;
 
 import lombok.Setter;
@@ -37,7 +38,7 @@ public class AdProductServiceImpl implements AdProductService {
 	}
 
 	@Override
-	public List<ProductVO> getListWithPaging(Criteria cri, CategoryVO categ) {
+	public List<ProductVO> getListWithPaging(Criteria cri, CategoryDTO categ) {
 		
 		return adProductMapper.getListWithPaging(cri, categ);
 	}

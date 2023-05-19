@@ -30,6 +30,7 @@ import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.PageDTO;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.dto.CategoryDTO;
 import com.joripcom.service.AdProductService;
 import com.joripcom.util.FileUtils;
 
@@ -147,11 +148,11 @@ public class AdProductController {
 	}
 	
 	@GetMapping("/pro_list")
-	public void pro_list(@ModelAttribute("cri") Criteria cri, CategoryVO categ, Model model) {
+	public void pro_list(@ModelAttribute("cri") Criteria cri, CategoryDTO categ, Model model) {
 		
 		List<ProductVO> pro_list = adProductService.getListWithPaging(cri, categ);
-		log.info(categ.getFirstCategory());
-		log.info(categ.getSecondCategory());
+//		log.info(firstCategory());
+//		log.info(categ.getSecondCategory());
 		
 		
 //		log.info("폴더경로: " + pro_list.get(0).getP_up_folder());
@@ -167,9 +168,18 @@ public class AdProductController {
 		int total = adProductService.getTotalCount(cri);
 		
 		PageDTO pageDTO = new PageDTO(total, cri);
+		CategoryDTO categoryDTO = new CategoryDTO(categ.getFirstCategory(), categ.getSecondCategory());
 		model.addAttribute("pageMaker", pageDTO);
 		model.addAttribute("categoryList", adProductService.getCategoryList());
+		model.addAttribute("category", categoryDTO);
 		
+		if(categoryDTO.getFirstCategory() != null) {
+		model.addAttribute("subCategoryList", adProductService.subCategoryList(categoryDTO.getFirstCategory()));
+
+//		log.info(adProductService.subCategoryList(categoryDTO.getFirstCategory()));
+		}
+		
+//		log.info(adProductService.getCategoryList());
 	}
 	
 	// 상품 수정 JSP

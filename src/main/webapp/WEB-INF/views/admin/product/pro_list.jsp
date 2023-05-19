@@ -112,27 +112,6 @@
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
       <section class="content container-fluid">
-        <div class="nav-scroller py-1 mb-2">
-          <nav class="navbar-nav d-flex justify-content-between">
-            <div>
-              <form id="categoryForm" action="/admin/product/pro_list" method="get">
-                <span>카테고리별 상품 : </span>
-                <select name="firstCategory" id="firstCategory">
-                  <option value="">1차 카테고리 선택</option>
-                  <c:forEach items="${categoryList }" var="category">
-                    <option value="${category.categ_cd }">${category.categ_name }</option>
-                  </c:forEach>
-                </select>			    	
-                <select name="secondCategory" id="secondCategory">
-                  <option>2차 카테고리 선택</option>
-                </select>
-                <input type="hidden" name="pageNum" value="1">
-                <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-                <button type="submit">검색</button>
-              </form>
-            </div>
-          </nav>
-        </div>
         <!--------------------------
           | Your Page Content Here |
           -------------------------->
@@ -146,7 +125,19 @@
               <div class="box-header with-border">
                 <form id="searchForm" action="/admin/product/pro_list" method="get">
                   <div class="form-group row">
-                    <div class="col-md-8">
+                    <div class="col-md-9">
+                      <select name="firstCategory" id="firstCategory">
+                        <option value="" <c:out value="${category.firstCategory == null? 'selected':'' }" />>1차 카테고리 선택</option>
+                        <c:forEach items="${categoryList }" var="categoryList">
+                          <option value="${categoryList.categ_cd }" ${categoryList.categ_cd == category.firstCategory ? 'selected' : ''}>${categoryList.categ_name }</option>
+                        </c:forEach>
+                      </select>			    	
+                      <select name="secondCategory" id="secondCategory">
+                        <option value="">2차 카테고리 선택</option>
+                        <c:forEach items="${subCategoryList }" var="subCategoryList">
+                          <option value="${subCategoryList.categ_cd }" ${subCategoryList.categ_cd == category.secondCategory ? 'selected' : ''}>${subCategoryList.categ_name }</option>
+                        </c:forEach>
+                      </select>
                       <select name="type">
                         <option value="" <c:out value="${pageMaker.cri.type == null? 'selected':'' }" />>-----</option>
                         <option value="N" <c:out value="${pageMaker.cri.type eq 'N'? 'selected':'' }" />>상품명</option>
@@ -155,10 +146,9 @@
                       <input type="text" name="keyword" placeholder="검색어를 입력하세요." value='<c:out value="${pageMaker.cri.keyword }" />'>
                       <input type="hidden" name="pageNum" value="1">
                       <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-                      <button type="submit" class="btn btn-success">Search</button>&nbsp;
-                      <button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
+                      <button type="submit" class="btn btn-success">검색</button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <button type="button" id="btn_checkedModify" class="btn btn-primary">선택상품수정</button>
                       <button type="button" id="btn_checkedDelete" class="btn btn-primary">선택상품삭제</button>
                     </div>
@@ -206,28 +196,33 @@
               </div>
               <!-- /.box-body -->
               <!-- [이전] 1 2 3 4 5 [다음] 출력작업 -->
-              <div class="box-footer clearfix">
-                <ul class="pagination pagination-sm no-margin pull-right">
-                  <c:if test="${pageMaker.prev }">
-                    <li><a href="${pageMaker.startPage - 1}">[prev]</a></li>
-                  </c:if>
-                  
-                  <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
-                    <li ${pageMaker.cri.pageNum == pageNum ? "class='active'": ""}><a href="${pageNum }">${pageNum }</a></li>
-                  </c:forEach>
-                  
-                  
-                  <c:if test="${pageMaker.next }">
-                    <li><a href="${pageMaker.endPage + 1}">[next]</a></li>
-                  </c:if>
-                </ul>
-                <!-- 페이징정보. Criteria 클래스 필드정보작업 -->
-                <form id="actionForm" action="/admin/product/pro_list" method="get">
-                  <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
-                  <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-                  <input type="hidden" name="type" value="${pageMaker.cri.type}">
-                  <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
-                </form>
+              <div class="box-footer clearfix row">
+                <div class="col-md-11">
+                  <ul class="pagination pagination-sm no-margin pull-right">
+                    <c:if test="${pageMaker.prev }">
+                      <li><a href="${pageMaker.startPage - 1}">[prev]</a></li>
+                    </c:if>
+                    
+                    <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
+                      <li ${pageMaker.cri.pageNum == pageNum ? "class='active'": ""}><a href="${pageNum }">${pageNum }</a></li>
+                    </c:forEach>
+                    
+                    
+                    <c:if test="${pageMaker.next }">
+                      <li><a href="${pageMaker.endPage + 1}">[next]</a></li>
+                    </c:if>
+                  </ul>
+                  <!-- 페이징정보. Criteria 클래스 필드정보작업 -->
+                  <form id="actionForm" action="/admin/product/pro_list" method="get">
+                    <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+                    <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+                    <input type="hidden" name="type" value="${pageMaker.cri.type}">
+                    <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
+                  </form>
+                </div>
+                <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
+                </div>
               </div>
             </div>
             
@@ -387,10 +382,7 @@
   $("#firstCategory").change(function() {
 
     let categ_cd = $(this).val();
-
-    let url = "/admin/product/subCategory/" + categ_cd + ".json";
-
-    console.log(productList);
+    let url = "/admin/product/subCategory/" + categ_cd;
 
     $.getJSON(url, function(subCategoryData){
 
@@ -402,6 +394,7 @@
 
       for(let i=0; i<subCategoryData.length; i++) {
         optionStr += "<option value='" + subCategoryData[i].categ_cd + "'>" + subCategoryData[i].categ_name + "</option>";
+                                                                                                                                                                    
       }
 
       secondCategory.append(optionStr);
@@ -412,4 +405,5 @@
 </script>
   </body>
 </html>
+
 

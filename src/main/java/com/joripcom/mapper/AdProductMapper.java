@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.dto.CategoryDTO;
 
 public interface AdProductMapper {
 	// 1차 카테고리
@@ -16,9 +17,9 @@ public interface AdProductMapper {
 	// 상품 등록
 	void pro_insert(ProductVO vo);
 	// 페이징 기능
-	List<ProductVO> getListWithPaging(@Param("cri") Criteria cri, @Param("categ") CategoryVO categ);
+	List<ProductVO> getListWithPaging(@Param("cri") Criteria cri, @Param("categ") CategoryDTO categ);
 	// 총 상품 수
-	int getTotalCount(Criteria cri);
+	int getTotalCount(@Param("cri") Criteria cri);
 	// 카테고리 정보
 	CategoryVO get_category(Integer categ_cd);
 	// 상품수정 정보 읽어오기

@@ -5,6 +5,7 @@ import java.util.List;
 import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.dto.CategoryDTO;
 
 public interface AdProductService {
 
@@ -14,7 +15,7 @@ public interface AdProductService {
 	
 	void pro_insert(ProductVO vo);
 	
-	List<ProductVO> getListWithPaging(Criteria cri, CategoryVO categ);
+	List<ProductVO> getListWithPaging(Criteria cri, CategoryDTO categ);
 	
 	int getTotalCount(Criteria cri);
 
