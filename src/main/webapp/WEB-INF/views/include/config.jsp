@@ -14,3 +14,6 @@
 
 <!-- Custom styles for this template -->
 <link href="https://getbootstrap.com/docs/4.6/examples/pricing/pricing.css" rel="stylesheet">
+
+<!-- kakao 로그인 -->
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>

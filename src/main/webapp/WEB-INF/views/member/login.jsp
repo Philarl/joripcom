@@ -86,10 +86,14 @@
 	              </div>
 	            </div>
 	            <!-- /.card-body -->
-	            <div class="card-footer">
-	              <button type="submit" class="btn btn-info" id="btn_login">로그인</button>
+	            <div class="card-footer row justify-content-between">
+	              <button type="submit" class="btn btn-info" style="height:50%; margin:auto 0;" id="btn_login">로그인</button>
+				  <button type="button" class="btn bg-transparent btn-outline-transparent" id="btn_kakao_login"><img src="/resources/kakao_login/ko/kakao_login_medium_narrow.png" /></button>
+				  <input type="hidden" name="kakaoemail" id="kakaoemail" />
+				  <input type="hidden" name="kakaoname" id="kakaoname" />
+				  <input type="hidden" name="kakaobirth" id="kakaobirth" />
 	              <button type="submit" class="btn btn-default float-right">취소</button>
-	            </div>
+	            </div>						
 	            <!-- /.card-footer -->
 	          </form>
 	        </div>
@@ -116,6 +120,37 @@
 			alert("비밀번호를 확인하세요");
 			$("#u_pw").focus();
 		}
+
+		window.Kakao.init("62423cacc11032f6d607afcb96874c04");
+
+		$("#btn_kakao_login").on("click", function() {
+			
+		window.Kakao.Auth.login({
+        scope:'profile,account_email,birthday',
+        success: function(authObj){
+            
+            window.Kakao.API.request({
+                url: '/v2/user/me',
+                success: res => {
+                    const email = res.kakao_account.email;
+                    const name = res.properties.nickname;
+                    const birth = res.kakao_account.birthday;
+
+                    console.log(email);
+                    console.log(name);
+                    console.log(birth);
+
+                    $('#kakaoemail').val(email);
+                    $('#kakaoname').val(name);
+                    $('#kakaobirth').val(birth);
+                    document.login_frm.submit();
+                }
+            });
+
+		}
+		});
+
+		});
 	});
 </script>
   </body>
