@@ -3,19 +3,30 @@ package com.joripcom.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joripcom.domain.MemberVO;
 import com.joripcom.dto.EmailDTO;
+import com.joripcom.dto.KakaoUserInfoDto;
 import com.joripcom.service.MemberService;
 
 import lombok.Setter;
@@ -55,6 +66,12 @@ public class MemberController {
 	// 회원가입 JSP
 	@GetMapping("/join")
 	public void join() {
+		
+	}
+	
+	// 카카오 회원가입 JSP
+	@GetMapping("/kakao_join")
+	public void kakao_join(String kakao_id) {
 		
 	}
 	
@@ -103,6 +120,95 @@ public class MemberController {
 		
 		return "redirect:" + url;
 	}
+	
+	//카카오 로그인
+	@GetMapping("kakao_login")
+	public String kakao_login(@RequestParam String code, HttpSession session, RedirectAttributes rttr) throws Exception {
+		
+		String accessToken = getAccessToken(code);
+		KakaoUserInfoDto dto = getKakaoUserInfo(accessToken);
+		
+//		log.info("토큰 : " + accessToken);
+		
+//		log.info("유저 정보 : " + dto);
+		
+		String kakao_id = dto.getId().toString();
+//		log.info("카카오아이디 : " + kakao_id);
+		
+		String url = "";
+		if(memberService.idCheck(kakao_id) == null ) {
+			url = "/member/kakao_join";
+			rttr.addAttribute("kakao_id", kakao_id);
+		}else {
+			MemberVO member = memberService.login(kakao_id);
+			session.setAttribute("loginStatus", member);
+			memberService.now_visit(kakao_id);
+			url = "/";
+		}
+		
+		return "redirect:" + url;
+	}
+	
+	private String getAccessToken(String code) throws Exception {
+		// HTTP Header 생성
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.add("Content-type", "application/x-www-form-urlencoded");
+
+		// HTTP Body 생성
+		        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		        body.add("grant_type", "authorization_code");
+		        body.add("client_id", "1401c401f827a987c8249ceec2e923ec");
+		        body.add("redirect_uri", "http://localhost:8888/member/kakao_login");
+		        body.add("code", code);
+
+		// HTTP 요청 보내기
+		        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
+		        RestTemplate rt = new RestTemplate();
+		        ResponseEntity<String> response = rt.exchange(
+		                "https://kauth.kakao.com/oauth/token",
+		                HttpMethod.POST,
+		                kakaoTokenRequest,
+		                String.class
+		        );
+
+		// HTTP 응답 (JSON) -> 액세스 토큰 파싱
+		        String responseBody = response.getBody();
+		        ObjectMapper objectMapper = new ObjectMapper();
+		        JsonNode jsonNode = objectMapper.readTree(responseBody);
+		        return jsonNode.get("access_token").asText();
+		    }
+	
+	private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws Exception {
+		// HTTP Header 생성
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.add("Authorization", "Bearer " + accessToken);
+		        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//		        log.info("헤더 : " + headers);
+
+		// HTTP 요청 보내기
+		        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
+		        RestTemplate rt = new RestTemplate();
+		        ResponseEntity<String> response = rt.exchange(
+		                "https://kapi.kakao.com/v2/user/me",
+		                HttpMethod.POST,
+		                kakaoUserInfoRequest,
+		                String.class
+		        );
+		        log.info("HTTP 응답 : " + response);
+
+		        String responseBody = response.getBody();
+//		        log.info("응답 내용" + responseBody);
+		        ObjectMapper objectMapper = new ObjectMapper();
+		        JsonNode jsonNode = objectMapper.readTree(responseBody);
+//		        log.info("json 내용 : " + jsonNode);
+		        Long id = jsonNode.get("id").asLong();
+//		        log.info("아이디 : " + id);
+//		        String email = jsonNode.get("kakao_account")
+//		                .get("email").asText();
+//		        log.info("이메일 : " + email);
+
+		        return new KakaoUserInfoDto(id);
+		    }
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {

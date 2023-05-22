@@ -120,36 +120,15 @@
 			alert("비밀번호를 확인하세요");
 			$("#u_pw").focus();
 		}
-
-		window.Kakao.init("62423cacc11032f6d607afcb96874c04");
+		
+		Kakao.init('62423cacc11032f6d607afcb96874c04');
+		Kakao.isInitialized();
 
 		$("#btn_kakao_login").on("click", function() {
 			
-		window.Kakao.Auth.login({
-        scope:'profile,account_email,birthday',
-        success: function(authObj){
-            
-            window.Kakao.API.request({
-                url: '/v2/user/me',
-                success: res => {
-                    const email = res.kakao_account.email;
-                    const name = res.properties.nickname;
-                    const birth = res.kakao_account.birthday;
-
-                    console.log(email);
-                    console.log(name);
-                    console.log(birth);
-
-                    $('#kakaoemail').val(email);
-                    $('#kakaoname').val(name);
-                    $('#kakaobirth').val(birth);
-                    document.login_frm.submit();
-                }
-            });
-
-		}
-		});
-
+			Kakao.Auth.authorize({
+				  redirectUri: 'http://localhost:8888/member/kakao_login'
+				});
 		});
 	});
 </script>

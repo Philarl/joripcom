@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -65,78 +64,86 @@
   	<div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-        	<form class="validation-form" id="modifyForm" method="post" action="/member/modify">
+        	<form class="validation-form" id="joinForm" method="post" action="/member/join">
 	          <div class="card card-primary">
 	              <div class="card-header">
-	                <h3 class="card-title">회원정보 수정</h3>
+	                <h3 class="card-title">회원 가입</h3>
 	              </div>
 	              <!-- /.card-header -->
 	              <!-- form start -->
-	              <form>
 	                <div class="card-body">
 	                  <div class="form-group row">
 	                  	<div class="col-md-4 mb-3">
-		                    <label for="u_id">아이디</label>
-		                    <input type="text" class="form-control" name="u_id" id="u_id" value="<c:out value='${memberVO.u_id }' />" readonly>
-	                    </div>
-	                  	<div class="col-md-4 mb-3">
 		                    <label for="u_name">이름</label>
-		                    <input type="text" class="form-control" name="u_name" id="u_name" value="<c:out value='${memberVO.u_name }' />">
+		                    <input type="text" class="form-control" name="u_name" id="u_name">
+		                    <input type="hidden" class="form-control" name="u_id" id="u_id" value="${kakao_id }">
+		                    <input type="hidden" class="form-control" name="u_pw" id="u_pw" value="${kakao_id }">
 	                    </div>
 	                  	<div class="col-md-4 mb-3">
-		                    <label for="u_email">이메일</label>
-		                    <input type="email" class="form-control" name="u_email" id="u_email" value="<c:out value='${memberVO.u_email }' />">
+		                    <label for="u_phone">전화번호</label>
+		                    <input type="text" class="form-control" name="u_phone" id="u_phone">
+	                    </div>
+	                  	<div class="col-md-4 mb-3">
+		                    <label for="u_nic">닉네임</label>
+		                    <input type="text" class="form-control" name="u_nic" id="u_nic">
 	                    </div>
 	                  </div>
 	                  <div class="form-group row">
 	                  	<div class="col-md-4 mb-3">
-		                    <label for="u_pw">비밀번호 확인</label>
-		                    <input type="text" class="form-control" name="u_pw" id="u_pw" placeholder="비밀번호를 입력해주세요.">
+		                    <label for="u_email">이메일</label>
+		                    <input type="email" class="form-control" name="u_email" id="u_email">
 	                    </div>
 	                  	<div class="col-md-2 mb-3">
+		                    <label for="btn_authcode"></label><br>
+		                    <button type="button" class="btn btn-primary" id="btn_authcode">인증코드 발송</button>
+	                    </div>
+	                  	<div class="col-md-4 mb-3">
+		                    <label for="email_auth_code">인증번호</label>
+		                    <input type="text" class="form-control" name="email_auth_code" id="email_auth_code">
+	                    </div>
+	                  	<div class="col-md-2 mb-3">
+		                    <label for="btn_confirmAuthcode"></label><br>
+		                    <button type="button" class="btn btn-primary" id="btn_confirmAuthcode">인증번호 확인</button>
+	                    </div>
+	                  </div>
+	                  <div class="form-group row">
+	                  	<div class="col-md-4 mb-3">
 		                    <label for="sample2_postcode">우편번호</label>
-		                    <input type="text" class="form-control" name="u_zipcode" id="sample2_postcode" value="<c:out value='${memberVO.u_zipcode }' />">
+		                    <input type="text" class="form-control" name="u_zipcode" id="sample2_postcode">
 	                    </div>
 	                  	<div class="col-md-2 mb-3">
 		                    <label for="btn_u_zipcode"> </label><br>
 		                    <button type="button" class="btn btn-primary" id="btn_u_zipcode" onclick="sample2_execDaumPostcode()">우편번호 찾기</button>
 	                    </div>
-	                  	<div class="col-md-4 mb-3">
+	                  	<div class="col-md-6 mb-3">
 		                    <label for="sample2_address">주소</label>
-		                    <input type="text" class="form-control" name="u_addr" id="sample2_address" value="<c:out value='${memberVO.u_addr }' />">
+		                    <input type="text" class="form-control" name="u_addr" id="sample2_address">
 	                    </div>
 	                  </div>
 	                  <div class="form-group row">
-	                  	<div class="col-md-6 mb-3">
+	                  	<div class="col-md-12 mb-3">
 		                    <label for="sample2_detailAddress">상세주소</label>
-		                    <input type="text" class="form-control" name="u_addr_dtl" id="sample2_detailAddress" value="<c:out value='${memberVO.u_addr_dtl }' />">
+		                    <input type="text" class="form-control" name="u_addr_dtl" id="sample2_detailAddress">
 		                    <input type="hidden" id="sample2_extraAddress" placeholder="참고항목">
-	                    </div>
-	                  	<div class="col-md-3 mb-3">
-		                    <label for="u_phone">전화번호</label>
-		                    <input type="text" class="form-control" name="u_phone" id="u_phone" value="<c:out value='${memberVO.u_phone }' />">
-	                    </div>
-	                  	<div class="col-md-3 mb-3">
-		                    <label for="u_nic">닉네임</label>
-		                    <input type="text" class="form-control" name="u_nic" id="u_nic" value="<c:out value='${memberVO.u_nic }' />">
 	                    </div>
 	                  </div>
 	                  <div class="form-check">
-	                    <input type="checkbox" class="form-check-input" name="check_email_rx" id="check_email_rx" value="Y" ${memberVO.check_email_rx == 'Y' ? 'checked':''}>
+	                    <input type="checkbox" class="form-check-input" name="check_personal" id="check_personal" required oninvalid="개인정보 수집에 동의해주세요.">
+	                    <label class="form-check-label" for="check_personal">개인정보 수집 및 이용에 동의합니다.</label><br>
+	                    <input type="checkbox" class="form-check-input" name="check_email_rx" id="check_email_rx" value="Y">
 	                    <label class="form-check-label" for="check_email_rx">메일 수신에 동의합니다.</label>
 	                  </div>
 	                </div>
 	                <!-- /.card-body -->
 	
 	                <div class="card-footer">
-	                  <button type="submit" class="btn btn-primary">회원 수정</button>
+	                  <button type="submit" class="btn btn-primary">Submit</button>
+	                </div>
 	                </div>
 	              </form>
 	            </div>
-            </form>
         </div>
       </div>
-    </div>
   <!-- iOS에서는 position:fixed 버그가 있음, 적용하는 사이트에 맞게 position:absolute 등을 이용하여 top,left값 조정 필요 -->
 	<div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
 	<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
@@ -238,13 +245,91 @@
         element_layer.style.top = (((window.innerHeight || document.documentElement.clientHeight) - height)/2 - borderWidth) + 'px';
     }
 </script>
-
 <script>
-	$(document).ready(function() {
-		let kakao_id = '${kakao_id}';
-    console.log(kakao_id);
-	});
-</script>
 
+  $(document).ready(function() {
+
+    let idCheck = false;
+    let isAuthcode = false;
+
+    // ID중복체크
+    $("#btn_idCheck").on("click", function() {
+      
+      if($("#u_id").val() == "") {
+        alert("아이디를 입력하세요.");
+        $("#u_id").focus();
+        return;
+      }
+
+      $.ajax({
+        url: '/member/idCheck',
+        type: 'get',
+        dataType: 'text',
+        data: {u_id : $("#u_id").val()},
+        success: function(result) {
+
+          if(result == "yes") {
+            alert("아이디 사용가능");
+            idCheck = true;
+          }else {
+            alert("아이디 사용 불가능");
+            $("#u_id").val("");
+            $("#u_id").focus();
+          }
+        }
+      }
+      );
+    });
+
+    // 메일인증코드
+    $("#btn_authcode").on("click", function() {
+      if($("#u_email").val() == "") {
+        alert("메일주소를 입력하세요.");
+        $("#u_email").focus();
+        return;
+      }
+
+      $.ajax({
+        url: '/email/send',
+        type: 'get',
+        dataType: 'text',
+        data: {receiverMail : $("#u_email").val()},
+        success: function(result) {
+
+          if(result == "success") {
+            alert("인증메일이 발송되었습니다. 메일을 확인해주세요.");
+          }
+        }
+      });
+    });
+
+    $("#btn_confirmAuthcode").on("click", function() {
+      if($("#email_auth_code").val() == "") {
+        alert("인증코드를 입력하세요.");
+        $("#email_auth_code").focus();
+        return;
+      }
+
+      $.ajax({
+        url: '/email/comfirmAuthcode',
+        type: 'get',
+        dataType: 'text',
+        data: {authCode : $("#email_auth_code").val()},
+        success: function(result) {
+
+          if(result == "success") {
+            alert("인증코드가 확인되었습니다.");
+            isAuthcode = true;
+          }else if(result == "fail") {
+            alert("인증코드가 다릅니다. 인증코드 요청을 다시 해주세요.");
+          }
+        }
+      });
+
+    });
+
+  });
+
+</script>
   </body>
 </html>

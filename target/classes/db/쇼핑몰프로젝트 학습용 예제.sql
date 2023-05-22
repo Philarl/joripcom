@@ -3,11 +3,11 @@
 편집일 : 2019-03-06
 프로젝트명 : 쇼핑몰
 */
-DROP TABLE MBSP_TBL;
+DROP TABLE MBSP_TBL CASCADE CONSTRAINTS;
 
 --1.회원가입 테이블
 CREATE TABLE MBSP_TBL(
-        MBSP_ID             VARCHAR2(15)            PRIMARY KEY,
+        MBSP_ID             VARCHAR2(15)            CONSTRAINT PK_MBSP_ID PRIMARY KEY,
         MBSP_NAME           VARCHAR2(30)            NOT NULL,
         MBSP_EMAIL          VARCHAR2(50)            NOT NULL,
         MBSP_PASSWORD       CHAR(60)                NOT NULL,   -- 비밀번호 암호화 처리
@@ -16,7 +16,7 @@ CREATE TABLE MBSP_TBL(
         MBSP_DEADDR         VARCHAR2(50)            NOT NULL,
         MBSP_PHONE          VARCHAR2(15)            NOT NULL,
         MBSP_NICK           VARCHAR2(20)            NOT NULL UNIQUE,
-        MBSP_RECEIVE        CHAR(1)                 NOT NULL,
+        MBSP_RECEIVE        CHAR(1) DEFAULT 'Y'                 NOT NULL,
         MBSP_POINT          NUMBER DEFAULT 0        NOT NULL,
         MBSP_DATESUB        DATE DEFAULT SYSDATE    NOT NULL,
         MBSP_UPDATEDATE     DATE DEFAULT SYSDATE    NOT NULL,
@@ -393,15 +393,33 @@ SET pro_price = 50000, pro_buy = 'N'
 WHERE pro_num = 2;
 END;
 
+ALTER TABLE MBSP_TBL ADD CONSTRAINT PRIMARY KEY(MBSP_ID);
+
+DROP TABLE CART_TBL;
 --4.장바구니 테이블
 CREATE TABLE CART_TBL(
-        CAT_CODE        NUMBER          PRIMARY KEY,
+        CART_CODE        NUMBER,
         PRO_NUM         NUMBER          NOT NULL,
         MBSP_ID         VARCHAR2(15)    NOT NULL,
-        CAT_AMOUNT      NUMBER          NOT NULL,
+        CART_AMOUNT      NUMBER          NOT NULL,
         FOREIGN KEY(PRO_NUM) REFERENCES PRODUCT_TBL(PRO_NUM),
-        FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
+        FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID),
+        CONSTRAINT PK_CART_CODE PRIMARY KEY(CART_CODE)
 );
+
+CREATE SEQUENCE SEQ_CART_CODE;
+--장바구니에 로그인 사용자가 상품을 추가시, 존재할 경우는 수량변경, 존재하지않는 경우는 상품추가
+
+merge into cart_tbl
+using dual
+on (mbsp_id = 'id값' and pro_num = '상품코드')
+when matched then
+    update
+        set cart_amount = cart_amount + 수량
+when not matched then
+    insert cart_code, pro_num, mbsp_id, cart_amount
+    values (?, ?, ?, ?);
+
 MERGE
     INTO CART_TBL C
 USING DUAL
@@ -428,7 +446,7 @@ COMMIT;
  
 */
 -- 장바구니 리스트 조회
-SELECT rownum, P.pro_img, P.pro_name, P.pro_price * C.cat_amount as price
+SELECT rownum, P.pro_up_folder, P.pro_img, P.pro_name, P.pro_price, P.pro_price * C.cart_amount as price
 FROM product_tbl p INNER JOIN cart_tbl c
 ON p.pro_num = c.pro_num
 WHERE c.MBSP_ID = 'user01';
