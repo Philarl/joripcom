@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joripcom.mapper.ProductMapper">
+
+	<select id="getCategoryList" resultType="com.joripcom.domain.CategoryVO">
+		SELECT
+			categ_cd, par_categ_cd, categ_name
+		FROM
+			categ_tbl
+		WHERE
+			par_categ_cd IS NULL
+	</select>
+	
+	<select id="subCategoryList" resultType="com.joripcom.domain.CategoryVO">
+		SELECT
+			categ_cd, par_categ_cd, categ_name
+		FROM
+			categ_tbl
+		WHERE
+			par_categ_cd = #{categ_cd}
+	</select>
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach collection="cri.typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">pro_name like '%' || #{cri.keyword} || '%'</when>
+						<when test="type == 'P'.toString()">pro_publisher like '%' || #{cri.keyword} || '%'</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="pro_list" resultType="com.joripcom.domain.ProductVO">
+		SELECT
+			RN, p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+		FROM (
+				SELECT /*+INDEX_DESC(p_tbl pk_p_no) */
+						ROWNUM RN, p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+				FROM
+					p_tbl
+				WHERE
+					<include refid="criteria" />
+					categ_cd = #{categ_cd} and
+					p_purchasable = 'Y' and
+		<![CDATA[		
+					ROWNUM <= #{cri.pageNum} * #{cri.amount}
+			)
+		WHERE RN > (#{cri.pageNum}-1) * #{cri.amount}
+		]]>
+	</select>
+	
+	<select id="pro_count" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			p_tbl
+		WHERE
+			<include refid="criteria" />
+			categ_cd = #{categ_cd} and
+			p_purchasable = 'Y'
+	</select>
+
+</mapper>
