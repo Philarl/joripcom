@@ -35,7 +35,7 @@ public class ProductVO {
 	private Integer categ_cd;
 	private String p_name;
 	private Integer p_px;
-	private Integer p_dc;
+	private Long p_dc;
 	private String p_mfr;
 	private String p_dtl;
 	private String p_up_folder;

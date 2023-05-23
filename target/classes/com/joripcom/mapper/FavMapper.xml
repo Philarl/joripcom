@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joripcom.mapper.FavMapper">
+
+	<select id="fav_check" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			fav_tbl
+		WHERE
+			u_id = #{u_id} and
+			p_no = #{p_no}
+	</select>
+	
+	<insert id="fav_add">
+		MERGE INTO
+			fav_tbl
+		USING
+			DUAL
+		ON
+	    (u_id = #{u_id} and p_no = #{p_no})
+		WHEN NOT MATCHED THEN
+			INSERT
+				(fav_no, p_no, u_id)
+			VALUES
+				(seq_fav_no.nextval, #{p_no}, #{u_id})
+	</insert>
+	
+	<select id="fav_list" resultType="com.joripcom.dto.FavDTO">
+		SELECT
+			ROWNUM rn, f.fav_no, f.p_no, f.u_id, p.p_up_folder, p.p_img, p.p_name, p.p_px, p.p_dc, p.p_purchasable
+		FROM
+			p_tbl p
+				INNER JOIN
+					fav_tbl f
+		ON
+			p.p_no = f.p_no
+		WHERE
+			f.u_id = #{u_id}
+	</select>
+	
+	<delete id="fav_delete">
+		DELETE FROM
+			fav_tbl
+		WHERE
+			fav_no = #{fav_no}
+	</delete>
+	
+	<delete id="fav_empty">
+		DELETE FROM
+			fav_tbl
+		WHERE
+			u_id = #{u_id}
+	</delete>
+	
+</mapper>

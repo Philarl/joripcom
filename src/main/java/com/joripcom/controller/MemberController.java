@@ -142,6 +142,7 @@ public class MemberController {
 		}else {
 			MemberVO member = memberService.login(kakao_id);
 			session.setAttribute("loginStatus", member);
+			session.setAttribute("kakaoLoginStatus", member);
 			memberService.now_visit(kakao_id);
 			url = "/";
 		}
@@ -194,7 +195,7 @@ public class MemberController {
 		                kakaoUserInfoRequest,
 		                String.class
 		        );
-		        log.info("HTTP 응답 : " + response);
+//		        log.info("HTTP 응답 : " + response);
 
 		        String responseBody = response.getBody();
 //		        log.info("응답 내용" + responseBody);
@@ -284,15 +285,32 @@ public class MemberController {
 		
 		String u_id = vo.getU_id();
 		String check_u_pw = vo.getU_pw();
-		
-		if(passwordEncoder.matches(u_pw, check_u_pw)) {
+
+//		--TODO-- 카카오 유저는 비밀번호 입력 없이 회원탈퇴 진행
+		if(session.getAttribute("kakaoLoginStatus") == null) {
+			if(passwordEncoder.matches(u_pw, check_u_pw)) {
+				memberService.delete(u_id);
+				
+				body = "delete";
+				session.invalidate();
+			}else {
+				body = "failPW";
+			}
+		}else {
 			memberService.delete(u_id);
 			
 			body = "delete";
 			session.invalidate();
-		}else {
-			body = "failPW";
 		}
+		
+//		if(passwordEncoder.matches(u_pw, check_u_pw)) {
+//			memberService.delete(u_id);
+//			
+//			body = "delete";
+//			session.invalidate();
+//		}else {
+//			body = "failPW";
+//		}
 		
 		entity = new ResponseEntity<String>(body, HttpStatus.OK);
 		

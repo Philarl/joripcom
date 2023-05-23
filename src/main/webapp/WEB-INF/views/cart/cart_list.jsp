@@ -70,56 +70,67 @@
 
 <div class="album py-5 bg-light">
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-	  <h4 class="display-4"><c:out value="${categ_name }" /></h4>
+	  <h4 class="display-4">장바구니</h4>
 	</div>
 <div class="container">
 	<div class="row">
-	  <div class="card-deck mb-3 text-center">
-	    <c:forEach items="${pro_list }" var="productVO">
-	    	<div class="col-md-3">
-		      <div class="card mb-4 shadow-sm">
-		        <div class="card-header">
-		          <h4 class="my-0 font-weight-normal"><a class="move" href="${productVO.p_no }">상품명 : ${productVO.p_name }</a></h4>
-		        </div>
-		        <div class="card-body">
-					<h5>가격: <fmt:formatNumber type="currency" pattern="￦#,###" value="${productVO.p_px }"/></h5>
-					<a class="move" href="${productVO.p_no }"><img style="width:100px; height:67px" src="/product/displayImage?folderName=${productVO.p_up_folder }&fileName=s_${productVO.p_img }"></a>
-					<button type="button" name="btn_fav" class="btn btn-link" data-p_no="${productVO.p_no }">찜하기</button>
-					<button type="button" name="btn_cart" class="btn btn-link" data-p_no="${productVO.p_no }">장바구니</button>
-					<button type="button" name="btn_direct_order" class="btn btn-link">바로구매</button>
-		        </div>
-		      </div>
-	      </div>
-	    </c:forEach>
-	  </div>
-  </div>
-	<div class="row">
 		<div class="col-md-12">
-	    <ul class="pagination justify-content-end">
-	      <c:if test="${pageMaker.prev}">
-	      	<li class="page-item"><a class="page-link" href="${pageMaker.startPage - 1}">«</a></li>
-	      </c:if>
-	      <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
-	         <!-- li 다음에 ${pageMaker.cri.pageNum == pageNum ? "active" : ""} -->
-	      	<li class="page-item" ${pageMaker.cri.pageNum == pageNum ? "class='active'" : ""}><a class="page-link" href="${pageNum}">${pageNum }</a></li>
-	      </c:forEach>
-	      <c:if test="${pageMaker.next}">
-	      	<li class="page-item"><a class="page-link" href="${pageMaker.endPage + 1}">»</a></li>
-	      </c:if>
-	    </ul>
-      <!-- 페이징 정보. Criteria 클래스 필드정보작업 -->
-      <form id="actionForm" action="/product/pro_list" method="get">
-        <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
-        <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-        <!-- 
-        <input type="hidden" name="type" value="${pageMaker.cri.type}">
-        <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
-         -->
-        <!-- 
-        <input type="hidden" name="cat_code" id="cat_code" value="${cat_code}">
-        <input type="hidden" name="categ_name" id="categ_name" value="${categ_name}">
-         -->
-      </form>
+			<div>
+				<div class="box-header">
+				</div>
+			<!-- /.box-header -->
+				<div>
+					<table class="table table-hover">
+					<tbody><tr>
+						<th style="width: 50%">상품명</th>
+						<th style="width: 10%">수량</th>
+						<th style="width: 10%">포인트</th>
+						<th style="width: 10%">배송비</th>
+						<th style="width: 10%">가격</th>
+						<th style="width: 10%">취소</th>
+					</tr>
+					<c:forEach items="${cart_list }" var="cartListDTO">      
+					<tr>
+						<td>
+						<input type="hidden" name="cart_no" value="${cartListDTO.cart_no }">
+						<a class="move" href="${cartListDTO.p_no}"><img src="/cart/displayImage?folderName=${cartListDTO.p_up_folder }&fileName=s_${cartListDTO.p_img }"></a>
+						<a class="move" href="${cartListDTO.p_no}"><c:out value="${cartListDTO.p_name }" /></a>
+						</td>
+						<td>
+							<input type="text" name="cart_amt" value="${cartListDTO.cart_amt }">
+							<button type="button" name="btn_cart_amt_change" class="btn btn-link">수량변경</button>
+						</td>
+						<td>포인트 : 0</td>
+						<td>[기본배송조건]</td>
+						<td><input type="text" name="p_px" value="${cartListDTO.p_px }" readonly></td>
+						<td><button type="button" name="btn_cart_del" class="btn btn-link">삭제</button></td>
+					</tr>
+					</c:forEach>
+					</tbody>
+					<c:if test="${!empty cart_list}">
+					<tfoot>
+						<tr>
+						<td colspan="6" class="text-right">총 구매금액 : <fmt:formatNumber type="currency" pattern="￦#,###" value="${cart_total_price }"/></td>
+						</tr>
+					</tfoot>
+					</c:if>
+					<c:if test="${empty cart_list}">
+					<tfoot>
+						<tr>
+						<td colspan="6" class="text-center">[장바구니가 비었습니다.]</td>
+						</tr>
+					</tfoot>
+					</c:if>
+				</table>
+			</div>
+			<div class="row">
+			<div class="col-md-12 text-center">
+				<button type="button" id="btn_cart_empty" class="btn btn-light">장바구니 비우기</button>
+				<button type="button" id="" class="btn btn-light">계속 쇼핑하기</button>
+				<button type="button" id="" class="btn btn-dark">주문하기</button>
+			</div>
+			</div>
+			<!-- /.box -->
 		</div>
 	</div>
   <%@include file="/WEB-INF/views/include/footer.jsp" %>
@@ -139,46 +150,50 @@
 <script>
 $(document).ready(function() {
 
-
-	$("button[name='btn_cart']").on("click", function() {
-
-		let p_no = $(this).data("p_no");
+	$("button[name='btn_cart_amt_change']").on("click", function() {
+		let btn = $(this);
+		let cart_no = btn.parent().parent().find("input[name='cart_no']").val();
+		let cart_amt = btn.parent().find("input[name='cart_amt']").val();
+		// console.log("카트 수량 변경 : " + cart_no + "/" + cart_amt);
 
 		$.ajax({
-			url: '/cart/cart_add',
+			url: '/cart/cart_amount_change',
 			type: 'post',
-			data: {p_no : p_no, cart_amt : 1},
+			data: {cart_no : cart_no, cart_amt : cart_amt},
 			success : function(result) {
-
-				// console.log("상품 번호 : " + p_no);
-
-				alert("장바구니에 추가되었습니다.")
-				if(confirm("장바구니로 이동하겠습니까?")) {
-					location.href="/cart/cart_list";
+				if(result == 'success') {
+					alert("수량이 변경되었습니다.");
+					location.href = "/cart/cart_list"
 				}
 			}
 
 		});
+
 	});
 
-	$("button[name='btn_fav']").on("click", function() {
-
-		let p_no = $(this).data("p_no");
+	$("button[name='btn_cart_del']").on("click", function() {
+		let cart_no = $(this).parent().parent().find("input[name='cart_no']").val();
 
 		$.ajax({
-			url: '/fav/fav_add',
+			url: '/cart/cart_delete',
 			type: 'post',
-			data: {p_no : p_no},
+			data: {cart_no : cart_no},
 			success : function(result) {
-
-				// console.log("상품 번호 : " + p_no);
-
-				alert("찜 목록에 추가되었습니다.")
-				
+				if(result == 'success') {
+					alert("삭제되었습니다.");
+					location.href = "/cart/cart_list"
+				}
 			}
 
 		});
+
 	});
+
+$("#btn_cart_empty").on("click", function() {
+	if(!confirm("장바구니를 비우시겠습니까?")) return;
+	location.href="/cart/cart_empty"
+	});
+
 });
 </script>
 </html>

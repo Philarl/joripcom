@@ -158,10 +158,90 @@ CREATE TABLE CART_TBL(
     CART_NO         NUMBER          CONSTRAINT PK_CART_NO PRIMARY KEY,
     P_NO            NUMBER,
     U_ID            VARCHAR2(20),
-    PURCHASED_AMT   NUMBER          NOT NULL,
+    CART_AMT   NUMBER          NOT NULL,
     FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO),
     FOREIGN KEY (U_ID) REFERENCES U_TBL (U_ID)
 );
+CREATE SEQUENCE seq_cart_no;
+
+-- 장바구니에 넣기
+MERGE INTO
+    CART_TBL
+USING
+    DUAL
+ON
+    (u_id = ? and p_no = ?)
+WHEN MATCHED THEN
+    UPDATE
+        SET
+            cart_amt = cart_amt + ?
+WHEN NOT MATCHED THEN
+    INSERT
+        (cart_no, p_no, u_id, cart_amt)
+    VALUES
+        (seq_cart_no.nextval, ?, ?, ?);
+-- 장바구니 목록
+SELECT
+    ROWNUM rn, c.cart_no, c.p_no, c.u_id, c.cart_amt, p.p_up_folder, p.p_img, p.p_img, p.p_px, (p.p_px * c.cart_amt) as sum
+FROM
+    p_tbl p
+        INNER JOIN
+            cart_tbl c
+ON
+    p.p_no = c.p_no
+WHERE
+    c.u_id = ?;
+-- 장바구니 수량 변경
+UPDATE
+    cart_tbl
+SET
+    cart_amt = ?
+WHERE
+    cart_no = ?;
+-- 장바구니에서 빼기
+DELETE FROM
+    cart_tbl
+WHERE
+    cart_no = ?;
+-- 장바구니 금액 계산
+SELECT
+    sum(p.p_px * c.cart_amt)
+FROM
+    p_tbl p
+        INNER JOIN
+            cart_tbl c
+ON
+    p.p_no = c.p_no
+WHERE
+    c.u_id = ?;
+-- 장바구니 비우기
+DELETE FROM
+    cart_tbl
+WHERE
+    u_id = ?;
+    
+-- 찜 목록 테이블
+DROP TABLE FAV_TBL CASCADE CONSTRAINTS;
+CREATE TABLE FAV_TBL(
+    FAV_NO  NUMBER      CONSTRAINT PK_FAV_NO PRIMARY KEY,
+    P_NO    NUMBER,
+    U_ID    VARCHAR2(20),
+    FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO),
+    FOREIGN KEY (U_ID) REFERENCES U_TBL (U_ID)
+);
+CREATE SEQUENCE SEQ_FAV_NO;
+-- 찜목록 넣기
+MERGE INTO
+    fav_tbl
+USING
+    DUAL
+ON
+(u_id = '2800881507' and p_no = 8)
+WHEN NOT MATCHED THEN
+    INSERT
+        (fav_no, p_no, u_id)
+    VALUES
+        (seq_fav_no.nextval, 8, '2800881507');
 
 -- 5. 주문 테이블
 DROP TABLE ORD_TBL CASCADE CONSTRAINTS;

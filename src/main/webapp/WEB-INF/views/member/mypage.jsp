@@ -122,8 +122,15 @@
 
                 <div class="card-footer">
                   <button type="button" class="btn btn-primary" id="btn_modify">회원정보 수정</button>
+                  <c:if test="${sessionScope.kakaoLoginStatus == null}">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pwchangeModal">비밀번호 변경</button>
+                  </c:if>
+                  <c:if test="${sessionScope.kakaoLoginStatus == null}">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal">회원 탈퇴</button>
+                  </c:if>
+                  <c:if test="${sessionScope.kakaoLoginStatus != null}">
+                  <button type="button" class="btn btn-primary" id="btn_kakao_delete">회원 탈퇴</button>
+                  </c:if>
                 </div>
               </form>
             </div>
@@ -200,6 +207,10 @@
 
 <script>
 	$(document).ready(function() {
+
+    // console.log('${sessionScope.loginStatus}');
+    // console.log('${sessionScope.kakaoLoginStatus}');
+
 		$("#btn_pwchange").on("click", function() {
 
 			if($("#new_u_pw").val() != $("#new2_u_pw").val()) {
@@ -260,6 +271,25 @@
 		$("#btn_modify").click(function() {
 			location.href = "/member/modify";
 		});
+
+    $("#btn_kakao_delete").on("click", function() {
+
+      if(!confirm("회원탈퇴하시겠습니까?")) return;
+
+      $.ajax({
+        url: '/member/delete',
+        type: 'post',
+        data: {},
+        dataType: 'text',
+        success: function(result) {
+          if(result == "delete") {
+            alert("회원탈퇴가 완료되었습니다.");
+          }
+        }
+      });
+
+      location.href = "/";
+    });
 	});
 </script>
   </body>
