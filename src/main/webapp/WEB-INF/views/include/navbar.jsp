@@ -15,6 +15,10 @@
     </c:if>
     <c:if test="${sessionScope.loginStatus != null }">
     	<a href="/member/mypage">마이페이지</a>
+      <a href="/product/rw_list">최근 본 상품</a>
+      <c:if test="${!empty rw_list} ">
+        가장 최근 본 상품
+      </c:if>
       <a href="/fav/fav_list">찜 목록</a>
       <a href="/cart/cart_list">장바구니</a>
     	<a href="/member/logout">로그아웃</a>

@@ -95,11 +95,12 @@ public class MemberController {
 	// 로그인 기능
 	@PostMapping("/login")
 	public String login(MemberVO vo, HttpSession session, RedirectAttributes rttr) {
-		
+
 		MemberVO member = memberService.login(vo.getU_id());
 		
 		String url = "";
 		String msg = "";
+		String msg_fav_dc = "";	
 		
 		if(member != null) {
 			if(passwordEncoder.matches(vo.getU_pw(), member.getU_pw())) {
@@ -107,6 +108,13 @@ public class MemberController {
 				
 				memberService.now_visit(member.getU_id());
 				url = "/";
+				
+				//찜 목록 할인 상품 체크
+				int check_fav_dc = memberService.check_fav_dc(member.getU_id());
+				
+				if(check_fav_dc != 0) {
+					msg_fav_dc = "isFavDC";
+				}
 			}else {
 				url = "/member/login";
 				msg = "failPW";
@@ -114,9 +122,16 @@ public class MemberController {
 		}else {
 			url = "/member/login";
 			msg = "failID";
+			
+			log.info(member);
+			log.info(vo.getU_id());
+			log.info(memberService.login(vo.getU_id()));
+			log.info(url);
+			log.info(msg);
 		}
 		
 		rttr.addFlashAttribute("msg", msg);
+		rttr.addFlashAttribute("msg_fav_dc", msg_fav_dc);
 		
 		return "redirect:" + url;
 	}
@@ -127,6 +142,8 @@ public class MemberController {
 		
 		String accessToken = getAccessToken(code);
 		KakaoUserInfoDto dto = getKakaoUserInfo(accessToken);
+		
+		String msg_fav_dc = "";	
 		
 //		log.info("토큰 : " + accessToken);
 		
@@ -145,7 +162,15 @@ public class MemberController {
 			session.setAttribute("kakaoLoginStatus", member);
 			memberService.now_visit(kakao_id);
 			url = "/";
+			
+			int check_fav_dc = memberService.check_fav_dc(kakao_id);
+			
+			if(check_fav_dc != 0) {
+				msg_fav_dc = "isFavDC";
+			}
 		}
+		
+		rttr.addFlashAttribute("msg_fav_dc", msg_fav_dc);
 		
 		return "redirect:" + url;
 	}

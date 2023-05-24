@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.domain.RWVO;
+import com.joripcom.dto.RWDTO;
 import com.joripcom.mapper.ProductMapper;
 
 import lombok.Setter;
@@ -40,6 +42,24 @@ public class ProductServiceImpl implements ProductService {
 	public int pro_count(Criteria cri, Integer categ_cd) {
 		
 		return productMapper.pro_count(cri, categ_cd);
+	}
+
+	@Override
+	public ProductVO pro_detail(Integer p_no) {
+		
+		return productMapper.pro_detail(p_no);
+	}
+
+	@Override
+	public void rw_insert(RWVO vo) {
+		productMapper.rw_insert(vo);
+		
+	}
+
+	@Override
+	public List<RWDTO> rw_list(String u_id) {
+		
+		return productMapper.rw_list(u_id);
 	}
 
 }

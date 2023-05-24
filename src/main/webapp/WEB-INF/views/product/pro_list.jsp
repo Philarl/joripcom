@@ -86,7 +86,7 @@
 					<a class="move" href="${productVO.p_no }"><img style="width:100px; height:67px" src="/product/displayImage?folderName=${productVO.p_up_folder }&fileName=s_${productVO.p_img }"></a>
 					<button type="button" name="btn_fav" class="btn btn-link" data-p_no="${productVO.p_no }">찜하기</button>
 					<button type="button" name="btn_cart" class="btn btn-link" data-p_no="${productVO.p_no }">장바구니</button>
-					<button type="button" name="btn_direct_order" class="btn btn-link">바로구매</button>
+					<button type="button" name="btn_direct_order" class="btn btn-link" data-p_no="${productVO.p_no }">바로구매</button>
 		        </div>
 		      </div>
 	      </div>
@@ -109,13 +109,11 @@
 	    </ul>
       <!-- 페이징 정보. Criteria 클래스 필드정보작업 -->
       <form id="actionForm" action="/product/pro_list" method="get">
+		<!--
         <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
         <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
-        <!-- 
         <input type="hidden" name="type" value="${pageMaker.cri.type}">
         <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
-         -->
-        <!-- 
         <input type="hidden" name="cat_code" id="cat_code" value="${cat_code}">
         <input type="hidden" name="categ_name" id="categ_name" value="${categ_name}">
          -->
@@ -139,6 +137,19 @@
 <script>
 $(document).ready(function() {
 
+	let actionForm = $("#actionForm");
+
+	$("a.move").on("click", function(e) {
+		e.preventDefault();
+
+		let p_no = $(this).attr("href");
+
+		actionForm.find("input[name='p_no']").remove();
+		actionForm.append("<input type='hidden' name='p_no' value='" + p_no + "'>");
+		actionForm.attr("action", "/product/pro_detail");
+
+		actionForm.submit();
+	});
 
 	$("button[name='btn_cart']").on("click", function() {
 
@@ -179,6 +190,15 @@ $(document).ready(function() {
 
 		});
 	});
+
+	$("button[name='btn_direct_order']").on("click", function() {
+
+		let url = "/cart/direct_cart_add?p_no=" + $(this).data("p_no") + "&cart_amt=1";
+
+		location.href = url;
+
+	});
+
 });
 </script>
 </html>

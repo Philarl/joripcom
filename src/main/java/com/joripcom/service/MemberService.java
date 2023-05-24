@@ -26,5 +26,7 @@ public interface MemberService {
 	MemberVO findPW(String u_id);
 	
 	void tempPW(String u_id, String new_u_pw);
+	
+	int check_fav_dc(String u_id);
 
 }

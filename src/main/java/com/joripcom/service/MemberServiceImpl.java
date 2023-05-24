@@ -101,4 +101,10 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public int check_fav_dc(String u_id) {
+		
+		return memberMapper.check_fav_dc(u_id);
+	}
+
 }

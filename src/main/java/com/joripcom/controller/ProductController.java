@@ -3,6 +3,7 @@ package com.joripcom.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
+import com.joripcom.domain.MemberVO;
 import com.joripcom.domain.PageDTO;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.domain.RWVO;
+import com.joripcom.dto.RWDTO;
 import com.joripcom.service.ProductService;
 import com.joripcom.util.FileUtils;
 
@@ -72,6 +76,37 @@ public class ProductController {
 	public ResponseEntity<byte[]> displayImage(String folderName, String fileName) throws Exception {
 		
 		return FileUtils.getFile(uploadPath + folderName, fileName);
+	}
+	
+	@GetMapping("pro_detail")
+	public void pro_detail(Integer p_no, RWVO rw, HttpSession session, Model model) {
+		
+		ProductVO vo = productService.pro_detail(p_no);
+		vo.setP_up_folder(vo.getP_up_folder().replace("\\", "/"));
+		
+		model.addAttribute("productVO", vo);
+		
+//		log.info(session.getAttribute("loginStatus"));
+		if(session.getAttribute("loginStatus") != null) {
+			rw.setU_id(((MemberVO) session.getAttribute("loginStatus")).getU_id());
+			productService.rw_insert(rw);
+			
+//			log.info(productService.rw_list(((MemberVO) session.getAttribute("loginStatus")).getU_id()));
+		}
+	}
+	
+	@GetMapping("/rw_list")
+	public void rw_list(HttpSession session, Model model) {
+		
+		String u_id = ((MemberVO) session.getAttribute("loginStatus")).getU_id();
+		List<RWDTO> rw_list = productService.rw_list(u_id);
+		
+		rw_list.forEach(vo -> {
+			vo.setP_up_folder(vo.getP_up_folder().replace("\\", "/"));
+		});
+		
+		model.addAttribute("rw_list", rw_list);
+		
 	}
 
 }

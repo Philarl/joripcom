@@ -26,5 +26,6 @@ public interface MemberMapper {
 	MemberVO findPW(String u_id);
 	//임시비밀번호
 	void tempPW(@Param("u_id") String u_id, @Param("new_u_pw") String new_u_pw);
-
+	//찜목록 할인여부 확인
+	int check_fav_dc(String u_id);
 }

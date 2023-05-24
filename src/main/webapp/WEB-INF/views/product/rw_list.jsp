@@ -70,55 +70,42 @@
 
 <div class="album py-5 bg-light">
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-	  <h4 class="display-4">찜 목록</h4>
+	  <h4 class="display-4">최근 본 상품</h4>
 	</div>
 <div class="container">
 	<div class="row">
+	  <div class="card-deck mb-3 text-center">
+	    <c:forEach items="${rw_list }" var="rwDTO">
+	    	<div class="col-md-3">
+		      <div class="card mb-4 shadow-sm">
+		        <div class="card-header">
+		          <h4 class="my-0 font-weight-normal"><a class="move" href="${rwDTO.p_no }">상품명 : ${rwDTO.p_name }</a></h4>
+		        </div>
+		        <div class="card-body">
+					<h5>가격: <fmt:formatNumber type="currency" pattern="￦#,###" value="${rwDTO.p_px }"/></h5>
+					<a class="move" href="${rwDTO.p_no }"><img style="width:100px; height:67px" src="/product/displayImage?folderName=${rwDTO.p_up_folder }&fileName=s_${rwDTO.p_img }"></a>
+					<button type="button" name="btn_fav" class="btn btn-link" data-p_no="${rwDTO.p_no }">찜하기</button>
+					<button type="button" name="btn_cart" class="btn btn-link" data-p_no="${rwDTO.p_no }">장바구니</button>
+					<button type="button" name="btn_direct_order" class="btn btn-link" data-p_no="${rwDTO.p_no }">바로구매</button>
+		        </div>
+		      </div>
+	      </div>
+	    </c:forEach>
+	  </div>
+  </div>
+	<div class="row">
 		<div class="col-md-12">
-			<div>
-				<div class="box-header">
-				</div>
-			<!-- /.box-header -->
-				<div>
-					<table class="table table-hover">
-					<tbody><tr>
-						<th style="width: 50%">상품명</th>
-						<th style="width: 10%">가격</th>
-						<th style="width: 10%">할인율</th>
-						<th style="width: 10%">판매여부</th>
-						<th style="width: 10%">장바구니</th>
-						<th style="width: 10%">삭제</th>
-					</tr>
-					<c:forEach items="${fav_list }" var="favDTO">      
-					<tr>
-						<td>
-						<input type="hidden" name="fav_no" value="${favDTO.fav_no }">
-						<a class="move" href="${favDTO.p_no}"><img src="/fav/displayImage?folderName=${favDTO.p_up_folder }&fileName=s_${favDTO.p_img }"></a>
-						<a class="move" href="${favDTO.p_no}"><c:out value="${favDTO.p_name }" /></a>
-						</td>
-						<td><input type="text" name="p_px" value="${favDTO.p_px }" readonly></td>
-						<td><input type="text" name="p_dc" value="${favDTO.p_dc }" readonly></td>
-						<td>
-							<select name="p_purchasable" disabled>
-							  <option value="Y" ${favDTO.p_purchasable == 'Y' ? 'selected':''}>판매중</option>
-							  <option value="N" ${favDTO.p_purchasable == 'N' ? 'selected':''}>품절</option>
-							</select>
-						</td>
-						<td><button type="button" name="btn_add_cart" data-p_no="${favDTO.p_no }" class="btn btn-link">추가</button></td>
-						<td><button type="button" name="btn_fav_del" class="btn btn-link">삭제</button></td>
-					</tr>
-					</c:forEach>
-					</tbody>
-				</table>
-			</div>
-			<div class="row">
-			<div class="col-md-12 text-center">
-				<button type="button" id="btn_fav_empty" class="btn btn-light">찜목록 비우기</button>
-				<button type="button" id="" class="btn btn-light">계속 쇼핑하기</button>
-				<button type="button" id="" class="btn btn-dark">주문하기</button>
-			</div>
-			</div>
-			<!-- /.box -->
+      <!-- 페이징 정보. Criteria 클래스 필드정보작업 -->
+      <form id="actionForm" action="/product/rw_list" method="get">
+		<!--
+        <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+        <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+        <input type="hidden" name="type" value="${pageMaker.cri.type}">
+        <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
+        <input type="hidden" name="cat_code" id="cat_code" value="${cat_code}">
+        <input type="hidden" name="categ_name" id="categ_name" value="${categ_name}">
+         -->
+      </form>
 		</div>
 	</div>
   <%@include file="/WEB-INF/views/include/footer.jsp" %>
@@ -138,45 +125,66 @@
 <script>
 $(document).ready(function() {
 
-	$("button[name='btn_add_cart']").on("click", function() {
+	let actionForm = $("#actionForm");
+
+	$("a.move").on("click", function(e) {
+		e.preventDefault();
+
+		let p_no = $(this).attr("href");
+
+		actionForm.find("input[name='p_no']").remove();
+		actionForm.append("<input type='hidden' name='p_no' value='" + p_no + "'>");
+		actionForm.attr("action", "/product/pro_detail");
+
+		actionForm.submit();
+	});
+
+	$("button[name='btn_cart']").on("click", function() {
+
 		let p_no = $(this).data("p_no");
 
 		$.ajax({
-			url: '/fav/fav_add_cart',
+			url: '/cart/cart_add',
 			type: 'post',
 			data: {p_no : p_no, cart_amt : 1},
 			success : function(result) {
-				if(result == 'success') {
-					alert("장바구니에 추가되었습니다.");
-					location.href = "/fav/fav_list"
+
+				// console.log("상품 번호 : " + p_no);
+
+				alert("장바구니에 추가되었습니다.")
+				if(confirm("장바구니로 이동하겠습니까?")) {
+					location.href="/cart/cart_list";
 				}
 			}
 
 		});
-
 	});
 
-	$("button[name='btn_fav_del']").on("click", function() {
-		let fav_no = $(this).parent().parent().find("input[name='fav_no']").val();
+	$("button[name='btn_fav']").on("click", function() {
+
+		let p_no = $(this).data("p_no");
 
 		$.ajax({
-			url: '/fav/fav_delete',
+			url: '/fav/fav_add',
 			type: 'post',
-			data: {fav_no : fav_no},
+			data: {p_no : p_no},
 			success : function(result) {
-				if(result == 'success') {
-					alert("삭제되었습니다.");
-					location.href = "/fav/fav_list"
-				}
+
+				// console.log("상품 번호 : " + p_no);
+
+				alert("찜 목록에 추가되었습니다.")
+				
 			}
 
 		});
-
 	});
 
-$("#btn_fav_empty").on("click", function() {
-	if(!confirm("찜 목록을 비우시겠습니까?")) return;
-	location.href="/fav/fav_empty"
+	$("button[name='btn_direct_order']").on("click", function() {
+
+		let url = "/cart/direct_cart_add?p_no=" + $(this).data("p_no") + "&cart_amt=1";
+
+		location.href = url;
+
 	});
 
 });

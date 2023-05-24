@@ -243,6 +243,36 @@ WHEN NOT MATCHED THEN
     VALUES
         (seq_fav_no.nextval, 8, '2800881507');
 
+-- 최근 본 상품 테이블
+DROP TABLE RW_TBL CASCADE CONSTRAINTS;
+CREATE TABLE RW_TBL (
+    RW_NO   NUMBER  CONSTRAINT PK_RW_NO PRIMARY KEY,
+    P_NO    NUMBER,
+    U_ID    VARCHAR2(20),
+    RW_DATE DATE DEFAULT SYSDATE,
+    FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO),
+    FOREIGN KEY (U_ID) REFERENCES U_TBL (U_ID)
+);
+DROP SEQUENCE SEQ_RW_NO;
+CREATE SEQUENCE SEQ_RW_NO;
+
+-- 최근 본 상품 리스트
+SELECT
+		ROWNUM rn, rw_no, p_no, u_id, rw_date
+	FROM
+		(
+		SELECT
+			rw_no, p_no, u_id, rw_date
+		FROM
+			rw_tbl
+		WHERE
+			u_id = '2800881507'
+		ORDER BY
+			rw_date DESC
+		)
+	WHERE
+		rownum < 21;
+
 -- 5. 주문 테이블
 DROP TABLE ORD_TBL CASCADE CONSTRAINTS;
 CREATE TABLE ORD_TBL(

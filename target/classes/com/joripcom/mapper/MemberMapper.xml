@@ -68,4 +68,16 @@
 		u_pw = #{new_u_pw}
 	where u_id = #{u_id}
 	</update>
+	
+	<select id="check_fav_dc" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			p_tbl p INNER JOIN fav_tbl f
+		ON
+			p.p_no = f.p_no
+		WHERE
+			f.u_id = #{u_id} and
+			p.p_dc > 0
+	</select>
 </mapper>

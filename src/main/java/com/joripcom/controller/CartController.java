@@ -54,6 +54,17 @@ public class CartController {
 		return entity;
 	}
 	
+	@GetMapping("/direct_cart_add")
+	public String direct_cart_add(CartVO vo, HttpSession session) {
+				
+		String u_id = ((MemberVO) session.getAttribute("loginStatus")).getU_id();
+		vo.setU_id(u_id);
+		
+		cartService.cart_add(vo);
+		
+		return "redirect:/order/order_info";
+	}
+	
 	@GetMapping("/cart_list")
 	public void cart_list(HttpSession session, Model model) {
 		

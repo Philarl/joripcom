@@ -70,57 +70,49 @@
 
 <div class="album py-5 bg-light">
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-	  <h4 class="display-4">찜 목록</h4>
+	  <h4 class="display-4"><c:out value="${categ_name }" /></h4>
 	</div>
 <div class="container">
 	<div class="row">
-		<div class="col-md-12">
-			<div>
-				<div class="box-header">
-				</div>
-			<!-- /.box-header -->
-				<div>
-					<table class="table table-hover">
-					<tbody><tr>
-						<th style="width: 50%">상품명</th>
-						<th style="width: 10%">가격</th>
-						<th style="width: 10%">할인율</th>
-						<th style="width: 10%">판매여부</th>
-						<th style="width: 10%">장바구니</th>
-						<th style="width: 10%">삭제</th>
-					</tr>
-					<c:forEach items="${fav_list }" var="favDTO">      
-					<tr>
-						<td>
-						<input type="hidden" name="fav_no" value="${favDTO.fav_no }">
-						<a class="move" href="${favDTO.p_no}"><img src="/fav/displayImage?folderName=${favDTO.p_up_folder }&fileName=s_${favDTO.p_img }"></a>
-						<a class="move" href="${favDTO.p_no}"><c:out value="${favDTO.p_name }" /></a>
-						</td>
-						<td><input type="text" name="p_px" value="${favDTO.p_px }" readonly></td>
-						<td><input type="text" name="p_dc" value="${favDTO.p_dc }" readonly></td>
-						<td>
-							<select name="p_purchasable" disabled>
-							  <option value="Y" ${favDTO.p_purchasable == 'Y' ? 'selected':''}>판매중</option>
-							  <option value="N" ${favDTO.p_purchasable == 'N' ? 'selected':''}>품절</option>
-							</select>
-						</td>
-						<td><button type="button" name="btn_add_cart" data-p_no="${favDTO.p_no }" class="btn btn-link">추가</button></td>
-						<td><button type="button" name="btn_fav_del" class="btn btn-link">삭제</button></td>
-					</tr>
-					</c:forEach>
-					</tbody>
-				</table>
-			</div>
-			<div class="row">
-			<div class="col-md-12 text-center">
-				<button type="button" id="btn_fav_empty" class="btn btn-light">찜목록 비우기</button>
-				<button type="button" id="" class="btn btn-light">계속 쇼핑하기</button>
-				<button type="button" id="" class="btn btn-dark">주문하기</button>
-			</div>
-			</div>
-			<!-- /.box -->
+  	<div class="col-md-6">
+  		<img style="width:400px; height:400px" src="/product/displayImage?folderName=${productVO.p_up_folder }&fileName=${productVO.p_img }">
+  	</div>
+  	<div class="col-md-6">
+  		<p class="my-0 font-weight-normal">상품명 : ${productVO.p_name }</p>
+  		<p>가격: <fmt:formatNumber type="currency" pattern="￦#,###" value="${productVO.p_px }"/></p>
+  		<p>제조사: ${productVO.p_mfr }</p>
+  		<p>수량 : <input type="text" id="cart_amt" value="1" style="width: 50px;"></p>
+		<button type="button" name="btn_fav" class="btn btn-link" data-p_no="${productVO.p_no }">찜하기</button>
+		<button type="button" name="btn_cart" class="btn btn-link" data-p_no="${productVO.p_no }">장바구니</button>
+		<button type="button" name="btn_direct_order" class="btn btn-link">바로구매</button>
+  	</div>
+  	<div>
+			<ul class="nav nav-tabs text-center" id="productDetailTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="detail-tab" data-toggle="tab" data-target="#detail" type="button" role="tab" aria-controls="detail" aria-selected="true">상세정보</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="rev-tab" data-toggle="tab" data-target="#rev" type="button" role="tab" aria-controls="rev" aria-selected="false">상품후기</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="qna-tab" data-toggle="tab" data-target="#qna" type="button" role="tab" aria-controls="qna" aria-selected="false">Q&A</button>
+				</li>
+			</ul>
 		</div>
-	</div>
+		<div class="tab-content" id="productDetailTabContent">
+		  <div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+		  	${productVO.p_dtl }
+		  </div>
+		  <div class="tab-pane fade" id="rev" role="tabpanel" aria-labelledby="rev-tab">
+		  	상품후기<br>
+		  	${productVO.p_dtl }
+		  </div>
+		  <div class="tab-pane fade" id="qna" role="tabpanel" aria-labelledby="qna-tab">
+				Q&A<br>
+				${productVO.p_dtl }
+		  </div>
+		</div>
+  </div>
   <%@include file="/WEB-INF/views/include/footer.jsp" %>
   
 </div>
@@ -138,47 +130,52 @@
 <script>
 $(document).ready(function() {
 
-	$("button[name='btn_add_cart']").on("click", function() {
+
+	$("button[name='btn_cart']").on("click", function() {
+
+		let p_no = $(this).data("p_no");
+		let cart_amt = $("#cart_amt").val();
+
+		$.ajax({
+			url: '/cart/cart_add',
+			type: 'post',
+			data: {p_no : p_no, cart_amt : cart_amt},
+			success : function(result) {
+
+				// console.log("상품 번호 : " + p_no);
+
+				alert("장바구니에 추가되었습니다.")
+				if(confirm("장바구니로 이동하겠습니까?")) {
+					location.href="/cart/cart_list";
+				}
+			}
+
+		});
+	});
+
+	$("button[name='btn_fav']").on("click", function() {
+
 		let p_no = $(this).data("p_no");
 
 		$.ajax({
-			url: '/fav/fav_add_cart',
+			url: '/fav/fav_add',
 			type: 'post',
-			data: {p_no : p_no, cart_amt : 1},
+			data: {p_no : p_no},
 			success : function(result) {
-				if(result == 'success') {
-					alert("장바구니에 추가되었습니다.");
-					location.href = "/fav/fav_list"
-				}
+
+				// console.log("상품 번호 : " + p_no);
+
+				alert("찜 목록에 추가되었습니다.")
+				
 			}
 
 		});
 
-	});
-
-	$("button[name='btn_fav_del']").on("click", function() {
-		let fav_no = $(this).parent().parent().find("input[name='fav_no']").val();
-
-		$.ajax({
-			url: '/fav/fav_delete',
-			type: 'post',
-			data: {fav_no : fav_no},
-			success : function(result) {
-				if(result == 'success') {
-					alert("삭제되었습니다.");
-					location.href = "/fav/fav_list"
-				}
-			}
-
+		$('#productDetailTab button').on('click', function (event) {
+		event.preventDefault()
+		$(this).tab('show')
 		});
-
 	});
-
-$("#btn_fav_empty").on("click", function() {
-	if(!confirm("찜 목록을 비우시겠습니까?")) return;
-	location.href="/fav/fav_empty"
-	});
-
 });
 </script>
 </html>

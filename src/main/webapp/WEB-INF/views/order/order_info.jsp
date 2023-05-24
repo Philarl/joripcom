@@ -70,7 +70,7 @@
 
 <div class="album py-5 bg-light">
   <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-	  <h4 class="display-4">찜 목록</h4>
+	  <h4 class="display-4">주문하기</h4>
 	</div>
 <div class="container">
 	<div class="row">
@@ -83,37 +83,39 @@
 					<table class="table table-hover">
 					<tbody><tr>
 						<th style="width: 50%">상품명</th>
+						<th style="width: 10%">수량</th>
+						<th style="width: 10%">포인트</th>
+						<th style="width: 10%">배송비</th>
 						<th style="width: 10%">가격</th>
-						<th style="width: 10%">할인율</th>
-						<th style="width: 10%">판매여부</th>
-						<th style="width: 10%">장바구니</th>
 						<th style="width: 10%">삭제</th>
 					</tr>
-					<c:forEach items="${fav_list }" var="favDTO">      
+					<c:forEach items="${cart_list }" var="cartListDTO">      
 					<tr>
 						<td>
-						<input type="hidden" name="fav_no" value="${favDTO.fav_no }">
-						<a class="move" href="${favDTO.p_no}"><img src="/fav/displayImage?folderName=${favDTO.p_up_folder }&fileName=s_${favDTO.p_img }"></a>
-						<a class="move" href="${favDTO.p_no}"><c:out value="${favDTO.p_name }" /></a>
+						<input type="hidden" name="cart_no" value="${cartListDTO.cart_no }">
+						<a class="move" href="${cartListDTO.p_no}"><img src="/cart/displayImage?folderName=${cartListDTO.p_up_folder }&fileName=s_${cartListDTO.p_img }"></a>
+						<a class="move" href="${cartListDTO.p_no}"><c:out value="${cartListDTO.p_name }" /></a>
 						</td>
-						<td><input type="text" name="p_px" value="${favDTO.p_px }" readonly></td>
-						<td><input type="text" name="p_dc" value="${favDTO.p_dc }" readonly></td>
 						<td>
-							<select name="p_purchasable" disabled>
-							  <option value="Y" ${favDTO.p_purchasable == 'Y' ? 'selected':''}>판매중</option>
-							  <option value="N" ${favDTO.p_purchasable == 'N' ? 'selected':''}>품절</option>
-							</select>
+							<input type="text" name="cart_amt" value="${cartListDTO.cart_amt }">
+							<button type="button" name="btn_cart_amt_change" class="btn btn-link">수량변경</button>
 						</td>
-						<td><button type="button" name="btn_add_cart" data-p_no="${favDTO.p_no }" class="btn btn-link">추가</button></td>
-						<td><button type="button" name="btn_fav_del" class="btn btn-link">삭제</button></td>
+						<td>포인트 : 0</td>
+						<td>[기본배송조건]</td>
+						<td><input type="text" name="p_px" value="${cartListDTO.p_px }" readonly></td>
+						<td><button type="button" name="btn_order_del" class="btn btn-link">삭제</button></td>
 					</tr>
 					</c:forEach>
 					</tbody>
+					<tfoot>
+						<tr>
+						<td colspan="6" class="text-right">총 구매금액 : <fmt:formatNumber type="currency" pattern="￦#,###" value="${cart_total_price }"/></td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 			<div class="row">
 			<div class="col-md-12 text-center">
-				<button type="button" id="btn_fav_empty" class="btn btn-light">찜목록 비우기</button>
 				<button type="button" id="" class="btn btn-light">계속 쇼핑하기</button>
 				<button type="button" id="" class="btn btn-dark">주문하기</button>
 			</div>
@@ -138,45 +140,10 @@
 <script>
 $(document).ready(function() {
 
-	$("button[name='btn_add_cart']").on("click", function() {
-		let p_no = $(this).data("p_no");
+	$("button[name='btn_order_del']").on("click", function() {
 
-		$.ajax({
-			url: '/fav/fav_add_cart',
-			type: 'post',
-			data: {p_no : p_no, cart_amt : 1},
-			success : function(result) {
-				if(result == 'success') {
-					alert("장바구니에 추가되었습니다.");
-					location.href = "/fav/fav_list"
-				}
-			}
+		$(this).parent().parent().remove();
 
-		});
-
-	});
-
-	$("button[name='btn_fav_del']").on("click", function() {
-		let fav_no = $(this).parent().parent().find("input[name='fav_no']").val();
-
-		$.ajax({
-			url: '/fav/fav_delete',
-			type: 'post',
-			data: {fav_no : fav_no},
-			success : function(result) {
-				if(result == 'success') {
-					alert("삭제되었습니다.");
-					location.href = "/fav/fav_list"
-				}
-			}
-
-		});
-
-	});
-
-$("#btn_fav_empty").on("click", function() {
-	if(!confirm("찜 목록을 비우시겠습니까?")) return;
-	location.href="/fav/fav_empty"
 	});
 
 });

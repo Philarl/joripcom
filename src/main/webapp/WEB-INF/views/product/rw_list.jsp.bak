@@ -82,7 +82,7 @@
 				<div>
 					<table class="table table-hover">
 					<tbody><tr>
-						<th style="width: 50%">상품명</th>
+						<th style="width: 60%">상품명</th>
 						<th style="width: 10%">가격</th>
 						<th style="width: 10%">할인율</th>
 						<th style="width: 10%">판매여부</th>

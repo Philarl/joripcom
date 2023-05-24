@@ -64,5 +64,54 @@
 			categ_cd = #{categ_cd} and
 			p_purchasable = 'Y'
 	</select>
+	
+	<select id="pro_detail" resultType="com.joripcom.domain.ProductVO">
+		SELECT
+			p_no, categ_cd, p_name, p_px, p_dc, p_mfr, p_dtl, p_up_folder, p_img, p_amt, p_purchasable, register_date, modify_date
+		FROM
+			p_tbl
+		WHERE
+			p_no = #{p_no}
+	</select>
+	
+	<insert id="rw_insert">
+	MERGE INTO
+		rw_tbl
+	USING
+		DUAL
+	ON
+		(p_no = #{p_no} and u_id = #{u_id})
+	WHEN MATCHED THEN
+		UPDATE
+			SET
+				rw_no = seq_rw_no.nextval,
+				rw_date	= sysdate
+	WHEN NOT MATCHED THEN
+		INSERT
+			(rw_no, p_no, u_id, rw_date)
+		VALUES
+			(seq_rw_no.nextval, #{p_no}, #{u_id}, sysdate)
+	</insert>
+	
+	<select id="rw_list" resultType="com.joripcom.dto.RWDTO">SELECT
+		ROWNUM rn, rw_no, p_no, u_id, rw_date, p_up_folder, p_img, p_name, p_px
+	FROM
+		(
+		SELECT
+			r.rw_no rw_no, r.p_no p_no, r.u_id u_id, r.rw_date rw_date, p.p_up_folder p_up_folder, p.p_img p_img, p.p_name p_name, p.p_px p_px
+		FROM
+			p_tbl p INNER JOIN rw_tbl r
+		ON
+			p.p_no = r.p_no
+		WHERE
+			u_id = #{u_id}
+		ORDER BY
+			rw_date DESC
+		)
+	WHERE
+<![CDATA[
+		rownum < 21
+]]>
+	</select>
 
 </mapper>

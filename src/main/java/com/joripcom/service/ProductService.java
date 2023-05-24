@@ -5,6 +5,8 @@ import java.util.List;
 import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.ProductVO;
+import com.joripcom.domain.RWVO;
+import com.joripcom.dto.RWDTO;
 
 public interface ProductService {
 	
@@ -15,5 +17,11 @@ public interface ProductService {
 	List<ProductVO> pro_list(Criteria cri, Integer categ_cd);
 	
 	int pro_count(Criteria cri, Integer categ_cd);
+
+	ProductVO pro_detail(Integer p_no);
+
+	void rw_insert(RWVO vo);
+	
+	List<RWDTO> rw_list(String u_id);
 
 }

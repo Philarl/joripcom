@@ -230,4 +230,19 @@
 <%@include file="/WEB-INF/views/include/config.jsp" %>
   
   </body>
+<script>
+
+  $(document).ready(function() {
+
+    msg_fav_dc = '${msg_fav_dc}';
+
+    if(msg_fav_dc == "isFavDC") {
+      alert("찜 목록에 할인 중인 상품이 있습니다.");
+      if(confirm("찜 목록을 확인하시겠습니까?")) {
+        location.href = "/fav/fav_list";
+      }
+    }
+  });
+
+</script>
 </html>
