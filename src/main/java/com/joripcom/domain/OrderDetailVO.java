@@ -1,5 +1,12 @@
 package com.joripcom.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class OrderDetailVO {
 	/*
 	CREATE TABLE OD_TBL(
@@ -11,5 +18,10 @@ public class OrderDetailVO {
 	    FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO)
 	);
 	*/
+	
+	private Integer ord_no;
+	private Integer p_no;
+	private Integer od_amt;
+	private Integer od_sum;
 
 }

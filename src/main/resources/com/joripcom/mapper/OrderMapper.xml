@@ -3,4 +3,36 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joripcom.mapper.OrderMapper">
+
+	<insert id="order_save">
+		<selectKey keyProperty="ord_no" order="BEFORE" resultType="int">
+			SELECT seq_ord_no.nextval FROM DUAL
+		</selectKey>
+
+	INSERT INTO ord_tbl
+		(ord_no, u_id, ord_name, ord_zipcode, ord_addr, ord_addr_details, ord_phone, ord_sum)
+	VALUES
+		(#{ord_no}, #{u_id}, #{ord_name}, #{ord_zipcode}, #{ord_addr}, #{ord_addr_details}, #{ord_phone}, #{ord_sum})
+	</insert>
+	
+	<insert id="order_detail_save">
+		INSERT INTO od_tbl
+			(ord_no, p_no, od_amt, od_sum)
+		(
+			SELECT
+				#{ord_no}, c.p_no, c.cart_amt, p.p_px
+			FROM
+				cart_tbl c INNER JOIN p_tbl p
+			ON
+				c.p_no = p.p_no
+		)
+	</insert>
+	
+	<insert id="payment_save">
+		INSERT INTO pay_tbl
+			(pay_no, ord_no, u_id, pay_method, pay_px, pay_user, pay_bank, pay_memo)
+		VALUES
+			(seq_pay_no.nextval, #{ord_no}, #{u_id}, #{pay_method}, #{pay_px}, #{pay_user}, #{pay_bank}, #{pay_memo})
+	</insert>
+	
 </mapper>

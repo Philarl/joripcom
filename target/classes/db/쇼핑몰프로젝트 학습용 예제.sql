@@ -492,6 +492,12 @@ CREATE TABLE ORDER_TBL(
         ORD_REGDATE         DATE DEFAULT SYSDATE    NOT NULL,
         FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
 );
+CREATE SEQUENCE SEQ_ORD_CODE;
+
+INSERT INTO order_tbl
+    (ord_code, mbsp_id, ord_name, ord_addr_num, ord_addr_basic, ord_addr_detail, ord_tel, ord_price)
+VALUES
+    ()
 
 --6.주문상세 테이블
 CREATE TABLE ORDETAIL_TBL(
@@ -501,6 +507,22 @@ CREATE TABLE ORDETAIL_TBL(
         DT_PRICE        NUMBER      NOT NULL,  -- 역정규화
         PRIMARY KEY (ORD_CODE ,PRO_NUM) 
 );
+
+-- 결제 테이블
+DROP TABLE PAYMENT_TBL;
+CREATE TABLE PAYMENT_TBL (
+    PAY_CODE    NUMBER CONSTRAINT PK_PAY_CODE NOT NULL,
+    ORD_CODE    NUMBER          NOT NULL,
+    MBSP_ID     VARCHAR2(15)    NOT NULL,
+    PAY_METHOD  VARCHAR2(15)    NOT NULL,
+    PAY_PRICE   NUMBER          NOT NULL,
+    PAY_USER    VARCHAR2(15)    NOT NULL,
+    PAY_BANK    VARCHAR2(15)    NOT NULL,
+    PAY_DATE    DATE DEFAULT SYSDATE,
+    PAY_MEMO    VARCHAR2(100)   NOT NULL
+);
+CREATE SEQUENCE seq_pay_code;
+
 /*
 
 장바구니 -> 주문하기 클릭 후 -> 주문정보 페이지

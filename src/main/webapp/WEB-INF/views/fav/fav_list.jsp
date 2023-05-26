@@ -115,7 +115,7 @@
 			<div class="col-md-12 text-center">
 				<button type="button" id="btn_fav_empty" class="btn btn-light">찜목록 비우기</button>
 				<button type="button" id="" class="btn btn-light">계속 쇼핑하기</button>
-				<button type="button" id="" class="btn btn-dark">주문하기</button>
+				<button type="button" id="btn_order" class="btn btn-dark">주문하기</button>
 			</div>
 			</div>
 			<!-- /.box -->
@@ -148,7 +148,7 @@ $(document).ready(function() {
 			success : function(result) {
 				if(result == 'success') {
 					alert("장바구니에 추가되었습니다.");
-					location.href = "/fav/fav_list"
+					location.href = "/fav/fav_list";
 				}
 			}
 
@@ -166,7 +166,7 @@ $(document).ready(function() {
 			success : function(result) {
 				if(result == 'success') {
 					alert("삭제되었습니다.");
-					location.href = "/fav/fav_list"
+					location.href = "/fav/fav_list";
 				}
 			}
 
@@ -176,7 +176,11 @@ $(document).ready(function() {
 
 $("#btn_fav_empty").on("click", function() {
 	if(!confirm("찜 목록을 비우시겠습니까?")) return;
-	location.href="/fav/fav_empty"
+	location.href="/fav/fav_empty";
+	});
+
+	$("#btn_order").on("click", function() {
+		location.href = "/order/order_info";
 	});
 
 });

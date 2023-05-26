@@ -23,6 +23,7 @@
 	<resources mapping="/bower_components/**" location="/resources/bower_components/" />
 	<resources mapping="/dist/**" location="/resources/dist/" />
 	<resources mapping="/css/**" location="/resources/css/" />
+	<resources mapping="/image/**" location="/resources/image/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -45,6 +46,11 @@
 	
 	<beans:bean id="uploadCkEditorPath" class="java.lang.String">
 		<beans:constructor-arg value="C:\\dev\\upload\\ckeditor\\" />
+	</beans:bean>
+	
+	<!-- kakaoPay API 가맹점코드 -->
+	<beans:bean id="cid" class="java.lang.String">
+		<beans:constructor-arg value="TC0ONETIME" />
 	</beans:bean>
 	
 	

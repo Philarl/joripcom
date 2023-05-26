@@ -41,6 +41,12 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	<!-- 트랜잭션 설정 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  	<property name="dataSource" ref="dataSource"></property>
+  </bean>
+  <tx:annotation-driven/>
+	
 	<!-- com.demo.service패키지를 찾아가서, @Service 어노테이션이 적용된 클래스를 bean으로 생성한다. -->
 	<context:component-scan base-package="com.joripcom.service" />
 	
