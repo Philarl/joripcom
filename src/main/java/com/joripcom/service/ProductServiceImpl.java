@@ -9,6 +9,8 @@ import com.joripcom.domain.CategoryVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.ProductVO;
 import com.joripcom.domain.RWVO;
+import com.joripcom.dto.CategoryDTO;
+import com.joripcom.dto.PriceDTO;
 import com.joripcom.dto.RWDTO;
 import com.joripcom.mapper.ProductMapper;
 
@@ -33,15 +35,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductVO> pro_list(Criteria cri, Integer categ_cd) {
+	public List<ProductVO> pro_list(Criteria cri, CategoryDTO categ, PriceDTO price) {
 		
-		return productMapper.pro_list(cri, categ_cd);
+		return productMapper.pro_list(cri, categ, price);
 	}
 
 	@Override
-	public int pro_count(Criteria cri, Integer categ_cd) {
+	public int pro_count(Criteria cri, CategoryDTO categ, PriceDTO price) {
 		
-		return productMapper.pro_count(cri, categ_cd);
+		return productMapper.pro_count(cri, categ, price);
 	}
 
 	@Override
@@ -60,6 +62,18 @@ public class ProductServiceImpl implements ProductService {
 	public List<RWDTO> rw_list(String u_id) {
 		
 		return productMapper.rw_list(u_id);
+	}
+
+	@Override
+	public List<ProductVO> pro_search(Criteria cri, CategoryDTO categ, PriceDTO price) {
+		
+		return productMapper.pro_search(cri, categ, price);
+	}
+
+	@Override
+	public int pro_searchCount(Criteria cri, CategoryDTO categ, PriceDTO price) {
+		
+		return productMapper.pro_searchCount(cri, categ, price);
 	}
 
 }

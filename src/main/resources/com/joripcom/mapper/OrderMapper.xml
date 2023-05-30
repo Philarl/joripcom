@@ -10,9 +10,9 @@
 		</selectKey>
 
 	INSERT INTO ord_tbl
-		(ord_no, u_id, ord_name, ord_zipcode, ord_addr, ord_addr_details, ord_phone, ord_sum)
+		(ord_no, u_id, ord_name, ord_zipcode, ord_addr, ord_addr_dtl, ord_phone, ord_email, ord_sum)
 	VALUES
-		(#{ord_no}, #{u_id}, #{ord_name}, #{ord_zipcode}, #{ord_addr}, #{ord_addr_details}, #{ord_phone}, #{ord_sum})
+		(#{ord_no}, #{u_id}, #{ord_name}, #{ord_zipcode}, #{ord_addr}, #{ord_addr_dtl}, #{ord_phone}, #{ord_email}, #{ord_sum})
 	</insert>
 	
 	<insert id="order_detail_save">

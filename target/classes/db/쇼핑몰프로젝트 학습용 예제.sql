@@ -523,6 +523,9 @@ CREATE TABLE PAYMENT_TBL (
 );
 CREATE SEQUENCE seq_pay_code;
 
+DROP SEQUENCE seq_ord_code;
+DROP SEQUENCE seq_pay_code;
+
 /*
 
 장바구니 -> 주문하기 클릭 후 -> 주문정보 페이지

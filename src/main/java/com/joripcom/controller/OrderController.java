@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joripcom.domain.MemberVO;
 import com.joripcom.domain.OrderVO;
@@ -61,6 +62,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/orderReady")
+	@ResponseBody
 	public ReadyResponse orderReady(String pay_type, String order_productName, OrderVO o_vo, PaymentVO p_vo, HttpSession session) {
 		ReadyResponse readyResponse = new ReadyResponse();
 		
@@ -94,6 +96,7 @@ public class OrderController {
 			session.setAttribute("tid", readyResponse.getTid());
 			session.setAttribute("ord_no", o_vo.getOrd_no());
 		}else if(pay_type.equals("bank")) {
+			log.info("무통장 입금 진행");
 			orderService.order_save(o_vo, p_vo);
 		}
 		
@@ -110,6 +113,21 @@ public class OrderController {
 		
 //		ApproveResponse approveResponse = kakaoPayService.payApprove(cid, tid, ord_no, u_id, pg_token);
 		
-		return "redirect:/order/order_complete";
+		return "redirect:/order/orderComplete";
+	}
+	
+	@GetMapping("/orderComplete")
+	public void orderComplete() {
+		
+	}
+	
+	@GetMapping("/orderCancel")
+	public void orderCancel() {
+		
+	}
+	
+	@GetMapping("/orderFail")
+	public void orderFail() {
+		
 	}
 }

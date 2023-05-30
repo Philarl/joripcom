@@ -10,7 +10,7 @@ import lombok.ToString;
 public class OrderDetailVO {
 	/*
 	CREATE TABLE OD_TBL(
-	    ORD_NO  NUMBER  CONSTRAINT PK_ORD_NO_P_NO PRIMARY KEY,
+	    ORD_NO  NUMBER,
 	    P_NO    NUMBER,
 	    OD_AMT  NUMBER  NOT NULL,
 	    OD_SUM  NUMBER  NOT NULL,

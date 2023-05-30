@@ -361,21 +361,21 @@ $(document).ready(function() {
 
 			let order_info = {
 				pay_type : pay_type,
-				order_productName : $("order_productName").val(),
-				ord_sum : $("ord_sum").val(),
+				order_productName : $("#order_productName").val(),
+				ord_sum : $("#ord_sum").val(),
 
-				ord_name : $("ord_name").val(),
-				ord_email : $("ord_email").val(),
-				ord_phone : $("ord_phone").val(),
+				ord_name : $("#ord_name").val(),
+				ord_email : $("#ord_email").val(),
+				ord_phone : $("#ord_phone").val(),
 
-				ord_zipcode : $("sample2_postcode").val(),
-				ord_addr : $("sample2_address").val(),
-				ord_addr_dtl : $("sample2_detailAddress").val(),
+				ord_zipcode : $("#sample2_postcode").val(),
+				ord_addr : $("#sample2_address").val(),
+				ord_addr_dtl : $("#sample2_detailAddress").val(),
 
-				pay_px: $("ord_sum").val(),
-				pay_method : $("pay_method").val(),
-				pay_bank : $("pay_bank").val(),
-				pay_user : $("pay_user").val(),
+				pay_px: $("#ord_sum").val(),
+				pay_method : $("#pay_method").val(),
+				pay_bank : $("#pay_bank").val(),
+				pay_user : $("#pay_user").val(),
 				pay_memo : '생략'
 			};
 
@@ -385,10 +385,12 @@ $(document).ready(function() {
 				dataType: 'json',
 				type: 'get',
 				success : function(result) {
+          console.log("응답: " + result.next_redirect_pc_url);
 					if(pay_type == "kakaopay") {
 						location.href = result.next_redirect_pc_url
 					}else if(pay_type == "bank") {
-						location.href = "/order/order_complete";
+          console.log("무통장입금 완료?");
+						location.href = "/order/orderComplete";
 					}
 				}
 

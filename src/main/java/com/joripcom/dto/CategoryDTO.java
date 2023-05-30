@@ -11,6 +11,7 @@ public class CategoryDTO {
 	
 	private Integer firstCategory;
 	private Integer secondCategory;
+	private Integer categ_cd;
 	private String categ_name;
 	
 	public CategoryDTO(Integer firstCategory, Integer secondCategory) {

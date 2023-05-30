@@ -1,5 +1,10 @@
 package com.joripcom.domain;
 
+import java.util.Date;
+
+import lombok.Data;
+
+@Data
 public class ReviewVO {
 	/*
 	CREATE TABLE REV_TBL (
@@ -8,10 +13,16 @@ public class ReviewVO {
 	    P_NO        NUMBER,
 	    REV_CONTENT  VARCHAR2(200)   NOT NULL,
 	    REV_STAR    NUMBER          NOT NULL,
-	    WRITE_DATE  DATE            DEFAULT SYSDATE NOT NULL,
+	    REV_REGDATE  DATE DEFAULT SYSDATE NOT NULL,
 	    FOREIGN KEY (U_ID) REFERENCES U_TBL (U_ID),
 	    FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO)
 	);
 	*/
-
+	
+	private Integer rev_no;
+	private String u_id;
+	private int p_no;
+	private String rev_content;
+	private int rev_star;
+	private Date rev_regdate;
 }

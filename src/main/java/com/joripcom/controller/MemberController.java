@@ -1,5 +1,7 @@
 package com.joripcom.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joripcom.domain.MemberVO;
 import com.joripcom.dto.EmailDTO;
 import com.joripcom.dto.KakaoUserInfoDto;
+import com.joripcom.dto.RWDTO;
 import com.joripcom.service.MemberService;
+import com.joripcom.service.ProductService;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -39,6 +42,8 @@ public class MemberController {
 	
 	@Setter(onMethod_ = {@Autowired})
 	private MemberService memberService;
+	@Setter(onMethod_ = {@Autowired})
+	private ProductService productService;
 	
 	@Setter(onMethod_ = {@Autowired})
 	private PasswordEncoder passwordEncoder;
@@ -115,6 +120,16 @@ public class MemberController {
 				if(check_fav_dc != 0) {
 					msg_fav_dc = "isFavDC";
 				}
+				
+				//최근 본 상품 썸네일
+				String u_id = ((MemberVO) session.getAttribute("loginStatus")).getU_id();
+				if(productService.rw_list(u_id).isEmpty() == false) {
+					List<RWDTO> rw_list = productService.rw_list(u_id);
+					RWDTO rwThumbnail = rw_list.get(0);
+					rwThumbnail.setP_up_folder(rwThumbnail.getP_up_folder().replace("\\", "/"));
+					session.setAttribute("rwThumbnail", rwThumbnail);
+//					log.info("최근 : " + rwThumbnail);
+				}
 			}else {
 				url = "/member/login";
 				msg = "failPW";
@@ -167,6 +182,16 @@ public class MemberController {
 			
 			if(check_fav_dc != 0) {
 				msg_fav_dc = "isFavDC";
+			}
+			
+			//최근 본 상품 썸네일
+			String u_id = ((MemberVO) session.getAttribute("loginStatus")).getU_id();
+			if(productService.rw_list(u_id).isEmpty() == false) {
+				List<RWDTO> rw_list = productService.rw_list(u_id);
+				RWDTO rwThumbnail = rw_list.get(0);
+				rwThumbnail.setP_up_folder(rwThumbnail.getP_up_folder().replace("\\", "/"));
+				session.setAttribute("rwThumbnail", rwThumbnail);
+//				log.info("최근 : " + rwThumbnail);
 			}
 		}
 		

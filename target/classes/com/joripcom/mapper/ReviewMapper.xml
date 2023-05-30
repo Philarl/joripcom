@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joripcom.mapper.ReviewMapper">
+<select id="review_list" resultType="com.joripcom.domain.ReviewVO">
+	SELECT
+		rev_no, u_id, p_no, rev_content, rev_star, rev_regdate
+	FROM
+		(
+		SELECT /*+INDEX_DESC (rev_tbl pk_rev_no)*/
+			ROWNUM rn, rev_no, u_id, p_no, rev_content, rev_star, rev_regdate
+		FROM
+			rev_tbl
+		WHERE
+			p_no = #{p_no} AND
+<![CDATA[
+			ROWNUM <= #{cri.pageNum} * #{cri.amount}
+		)
+	WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+]]>
+</select>
+
+<select id="review_count" resultType="int">
+	SELECT
+		count(*)
+	FROM
+		rev_tbl
+	WHERE
+		p_no = #{p_no}
+</select>
+</mapper>
