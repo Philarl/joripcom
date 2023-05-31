@@ -10,5 +10,9 @@ public interface ReviewService {
 	List<ReviewVO> review_list(Criteria cri, int p_no);
 	
 	int review_count(int p_no);
+	
+	void create(ReviewVO vo);
+	
+	void modify(ReviewVO vo);
 
 }

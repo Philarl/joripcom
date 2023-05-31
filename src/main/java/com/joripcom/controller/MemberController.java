@@ -128,7 +128,7 @@ public class MemberController {
 					RWDTO rwThumbnail = rw_list.get(0);
 					rwThumbnail.setP_up_folder(rwThumbnail.getP_up_folder().replace("\\", "/"));
 					session.setAttribute("rwThumbnail", rwThumbnail);
-//					log.info("최근 : " + rwThumbnail);
+					log.info("최근 : " + rwThumbnail);
 				}
 			}else {
 				url = "/member/login";

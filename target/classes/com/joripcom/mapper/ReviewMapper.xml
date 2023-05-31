@@ -5,11 +5,11 @@
 <mapper namespace="com.joripcom.mapper.ReviewMapper">
 <select id="review_list" resultType="com.joripcom.domain.ReviewVO">
 	SELECT
-		rev_no, u_id, p_no, rev_content, rev_star, rev_regdate
+		rev_no, u_id, p_no, rev_content, rev_score, rev_regdate
 	FROM
 		(
 		SELECT /*+INDEX_DESC (rev_tbl pk_rev_no)*/
-			ROWNUM rn, rev_no, u_id, p_no, rev_content, rev_star, rev_regdate
+			ROWNUM rn, rev_no, u_id, p_no, rev_content, rev_score, rev_regdate
 		FROM
 			rev_tbl
 		WHERE
@@ -29,4 +29,22 @@
 	WHERE
 		p_no = #{p_no}
 </select>
+
+<insert id="create">
+	INSERT INTO rev_tbl
+		(rev_no, u_id, p_no, rev_content, rev_score)
+	VALUES
+		(seq_rev_no.nextval, #{u_id}, #{p_no}, #{rev_content}, #{rev_score})
+</insert>
+
+<update id="modify">
+	UPDATE
+		rev_tbl
+	SET
+		rev_content = #{rev_content},
+		rev_score = #{rev_score},
+		rev_regdate = sysdate
+	WHERE
+		rev_no = #{rev_no}
+</update>
 </mapper>

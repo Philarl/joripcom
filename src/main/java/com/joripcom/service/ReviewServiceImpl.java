@@ -29,4 +29,16 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewMapper.review_count(p_no);
 	}
 
+	@Override
+	public void create(ReviewVO vo) {
+		reviewMapper.create(vo);
+		
+	}
+
+	@Override
+	public void modify(ReviewVO vo) {
+		reviewMapper.modify(vo);
+		
+	}
+
 }

@@ -64,14 +64,13 @@
   	<div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-        	<form class="validation-form" id="joinForm" method="post" action="/member/join">
+        	<form class="validation-form" id="joinForm" method="post" action="/member/join" onsubmit="return validation();">
 	          <div class="card card-primary">
 	              <div class="card-header">
 	                <h3 class="card-title">회원가입</h3>
 	              </div>
 	              <!-- /.card-header -->
 	              <!-- form start -->
-	              <form>
 	                <div class="card-body">
 	                  <div class="form-group row">
 	                  	<div class="col-md-5 mb-3">
@@ -145,8 +144,9 @@
 	                    </div>
 	                  </div>
 	                  <div class="form-check">
-	                    <input type="checkbox" class="form-check-input" name="check_personal" id="check_personal" required oninvalid="개인정보 수집에 동의해주세요.">
+	                    <input type="checkbox" class="form-check-input" name="check_personal" id="check_personal" required>
 	                    <label class="form-check-label" for="check_personal">개인정보 수집 및 이용에 동의합니다.</label><br>
+                      <input type="hidden" name="check_email_rx" value="N">
 	                    <input type="checkbox" class="form-check-input" name="check_email_rx" id="check_email_rx" value="Y">
 	                    <label class="form-check-label" for="check_email_rx">메일 수신에 동의합니다.</label>
 	                  </div>
@@ -156,7 +156,6 @@
 	                <div class="card-footer">
 	                  <button type="submit" class="btn btn-primary">Submit</button>
 	                </div>
-	              </form>
 	            </div>
             </form>
         </div>
@@ -264,12 +263,10 @@
     }
 </script>
 <script>
+  let idCheck = false;
+  let isAuthcode = false;
 
   $(document).ready(function() {
-
-    let idCheck = false;
-    let isAuthcode = false;
-
     // ID중복체크
     $("#btn_idCheck").on("click", function() {
       
@@ -345,8 +342,107 @@
       });
 
     });
-
   });
+
+  function validation() {
+
+    let idRegex = /^([a-zA-Z0-9]){5,16}$/;
+    let nameRegex = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+    let pwRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+    let emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    let phoneRegex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+
+    if($("#u_id").val() == "") {
+      alert("아이디를 입력하세요.");
+      return false;
+    }
+    if(!idRegex.test($("#u_id").val())) {
+      alert("아이디는 영문 혹은 숫자를 사용한 5~16자리 이내여야 합니다.");
+      $("#u_id").focus();
+      return false;
+    }
+    if(idCheck == false) {
+      alert("아이디 중복체크는 필수입니다.");
+      return false;
+    }
+
+    if($("#u_name").val() == "") {
+      alert("이름을 입력하세요.");
+      return false;
+    }
+    if(!nameRegex.test($("#u_name").val())) {
+      alert("이름은 한글 2~4자 이내 혹은 영문 2~10자 이내여야 합니다.");
+      $("#u_id").focus();
+      return false;
+    }
+
+    if($("#u_pw").val() == "") {
+      alert("비밀번호를 입력하세요.");
+      return false;
+    }
+    if(!pwRegex.test($("#u_pw").val())) {
+      alert("비밀번호는 영문, 숫자, 특수문자를 조합한 8~16자 이내여야 합니다.");
+      $("#u_pw").focus();
+      return false;
+    }
+
+    if($("#u_checkpw").val() == "") {
+      alert("확인비밀번호를 입력하세요.");
+      return false;
+    }
+    if(!pwRegex.test($("#u_checkpw").val())) {
+      alert("확인비밀번호는 영문, 숫자, 특수문자를 조합한 8~16자 이내여야 합니다.");
+      $("#u_checkpw").focus();
+      return false;
+    }
+    if($("#u_pw").val() != $("#u_checkpw").val()) {
+      alert("비밀번호와 확인비밀번호가 다릅니다.");
+      return false;
+    }
+
+    if($("#u_email").val() == "") {
+      alert("이메일을 입력하세요.");
+      return false;
+    }
+    if(!emailRegex.test($("#u_email").val())) {
+      alert("이메일 형식을 확인하세요.");
+      return false;
+    }
+    if(isAuthcode == false) {
+      alert("이메일 인증은 필수입니다.");
+      return false;
+    }
+
+    if($("#sample2_postcode").val() == "") {
+      alert("우편번호를 입력하세요.");
+      return false;
+    }
+
+    if($("#sample2_address").val() == "") {
+      alert("주소를 입력하세요.");
+      return false;
+    }
+
+    if($("#sample2_detailAddress").val() == "") {
+      alert("상세주소를 입력하세요.");
+      return false;
+    }
+
+    if($("#u_phone").val() == "") {
+      alert("연락처를 입력하세요.");
+      return false;
+    }
+    if(!phoneRegex.test($("#u_phone").val())) {
+      alert("연락처 형식을 확인해주세요.");
+      $("#u_phone").focus();
+      return false;
+    }
+
+    if($("#u_nic").val() == "") {
+      alert("닉네임을 입력하세요.");
+      return false;
+    }
+  }
 
 </script>
   </body>

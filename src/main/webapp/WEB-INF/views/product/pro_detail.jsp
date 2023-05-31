@@ -44,6 +44,35 @@
           font-size: 3.5rem;
         }
       }
+
+      a.rev_score {
+        text-decoration: none;
+        color: lightgray;
+      }
+
+      a.rev_score.on {
+        color: black;
+      }
+
+      p#star_rev_score a.rev_score {
+        font-size: 22px;
+        text-decoration: none;
+        color: lightgray;
+      }
+
+      p#star_rev_score a.rev_score.on {
+        color: black;
+      }
+
+      td#star_rev_score a.rev_score {
+        font-size: 22px;
+        text-decoration: none;
+        color: lightgray;
+      }
+
+      td#star_rev_score a.rev_score.on {
+        color: black;
+}
     </style>
 
     
@@ -110,21 +139,21 @@
 						<div class="col-md-12">
 							<!-- <form role="form"> -->
 								<div class="box-body">
-									<label for="exampleInputEmail1">댓글</label>
+									<label for="exampleInputEmail1">상품 후기</label>
 									<div class="form-group row">
 										<div class="col-md-8">
-											<input type="text" class="form-control" id="reply" placeholder="상품후기를 작성하세요...">
-											<p id="star_rv_score">
-												<a class="rv_score" href="#">☆</a>
-												<a class="rv_score" href="#">☆</a>
-												<a class="rv_score" href="#">☆</a>
-												<a class="rv_score" href="#">☆</a>
-												<a class="rv_score" href="#">☆</a>
+											<input type="text" class="form-control" id="rev_content" placeholder="상품후기를 작성하세요...">
+											<p id="star_rev_score">
+												<a class="rev_score" href="#">☆</a>
+												<a class="rev_score" href="#">☆</a>
+												<a class="rev_score" href="#">☆</a>
+												<a class="rev_score" href="#">☆</a>
+												<a class="rev_score" href="#">☆</a>
 											</p>
-											<input type="hidden" class="form-control" id="replyer" value="${u_id}">
+											<input type="hidden" class="form-control" id="reviewer" value="${u_id}">
 										</div>
 										<div class="col-md-4">
-											<button type="button" id="btn_replyWrite" class="btn btn-primary">등록</button>
+											<button type="button" id="btn_reviewWrite" class="btn btn-primary">등록</button>
 										</div>
 									</div>
 								</div>
@@ -134,7 +163,7 @@
 		
 					<!-- 댓글 목록 및 페이징 작업 -->
 					<div id="replyList"></div>
-					<div id="replyPaging"></div>
+					<div id="reviewPaging"></div>
 				</div>
 		  </div>
 		  <div class="tab-pane fade" id="qna" role="tabpanel" aria-labelledby="qna-tab">
@@ -163,13 +192,15 @@
     {{#each .}}
     <tr>
       <td>{{rev_no}}</td>
-      <td>{{displayStar rev_star}}</td>
+      <td>{{displayStar rev_score}} <input type="hidden" name="rev_score" value="{{rev_score}}"></td>
       <td>{{rev_content}}</td>
       <td>{{u_id}}</td>
       <td>{{convertDate rev_regdate}}</td>
       <td>
-        <button type="button" data-rev_no="{{rev_no}}" name="btn_re_edit" class="btn btn-link">Edit</button>
-        <button type="button" data-rev_no="{{rev_no}}" name="btn_re_delete" class="btn btn-link">Delete</button>
+        <c:if test="${u_id != null}">
+          <button type="button" data-rev_no="{{rev_no}}" name="btn_re_edit" class="btn btn-link">Edit</button>
+          <button type="button" data-rev_no="{{rev_no}}" name="btn_re_delete" class="btn btn-link">Delete</button>
+        </c:if>
       </td>
     </tr>
     {{/each}}
@@ -296,14 +327,14 @@ $(document).ready(function() {
     //댓글페이지 번호 클릭시
     /*
     동적으로 추가된 태그로 인하여 click 이벤트 설정 안됨
-    $("#replyPaging li a").on("click", function(e) {
+    $("#reviewPaging li a").on("click", function(e) {
       e.preventDefault(); // 링크기능 취소
       console.log("댓글 페이지번호 클릭");
     });
     */
 
     // 동적으로 추가된 태그를 click 이벤트 설정시 하는 방법
-    $("#replyPaging").on("click", "li a", function(e) {
+    $("#reviewPaging").on("click", "li a", function(e) {
       e.preventDefault(); // 링크기능 취소
       // console.log("댓글 페이지번호 클릭");
 
@@ -312,28 +343,53 @@ $(document).ready(function() {
       getPage(url);
     });
 
+    // 평점 별 클릭
+    $("p#star_rev_score a.rev_score").on("click", function(e) {
+      e.preventDefault();
+
+      $(this).parent().children().removeClass("on");
+      $(this).addClass("on").prevAll("a").addClass("on");
+    });
+
     // 댓글쓰기
-    $("#btn_replyWrite").on("click", function() {
-    let reply = $("#reply").val(); // 댓글내용
-    let replyer = $("#replyer").val(); // 댓글작성자
+    $("#btn_reviewWrite").on("click", function() {
+    let rev_content = $("#rev_content").val();
+    let rev_score = 0;
 
-    // {"p_no" : 255, "replyer" : "나그네", "reply" : "255번 댓글 내용"}
-    let replyData = JSON.stringify({p_no : ${productVO.p_no}, replyer : replyer, reply : reply});
+    // 별 평점 체크
+    $("p#star_rev_score a.rev_score").each(function(index, item) {
+      if($(this).attr("class") == "rev_score on") {
+        rev_score += 1;
+      }
+    });
 
-    // console.log(replyData);
+    if(rev_score == 0) {
+      alert("평점을 입력하세요.");
+      return;
+    }
+    if(rev_content == "") {
+      alert("상품후기를 입력하세요.");
+      return;
+    }
+
+    // {"p_no" : 255, "reviewer" : "나그네", "reply" : "255번 댓글 내용"}
+    let reviewData = JSON.stringify({p_no : ${productVO.p_no}, rev_content : rev_content, rev_score : rev_score});
+
+    // console.log(reviewData);
 
       $.ajax({
         type: 'post',
-        url: '/replies/new', // 매핑주소의 컨트롤러 클래스가 @RestController이므로, 전송데이터를 JSON 형식으로 사용함.
+        url: '/review/new', // 매핑주소의 컨트롤러 클래스가 @RestController이므로, 전송데이터를 JSON 형식으로 사용함.
         headers: {
           "Content-Type" : "application/json", "X-HTTP-Method-Override" : "POST"
         },
         dataType: 'text', // 스프링 메소드의 리턴타입
-        data: replyData, // 서버로 보내는 JSON 데이터.
+        data: reviewData, // 서버로 보내는 JSON 데이터.
         success: function(result) {
           if(result == "success") {
-            $("#reply").val("");
-            $("#replyer").val("");
+            alert("상품후기 등록됨");
+            $("#rev_content").val("");
+            $("p#star_rev_score a.rev_score").removeClass("on");
 
             reviewPage = 1;
             url = "/review/list/" + p_no + "/" + reviewPage + ".json";
@@ -350,51 +406,78 @@ $(document).ready(function() {
     $("div#replyList").on("click", "button[name='btn_re_edit']", function() {
       console.log("댓글수정");
       let cur_tr = $(this).parent().parent();
-      let rno = cur_tr.children().eq(0).text();
-      let reply = cur_tr.children().eq(1).text();
-      let replyer = cur_tr.children().eq(2).text();
-      let regdate = cur_tr.children().eq(3).text();
+      let rev_no = cur_tr.children().eq(0).text();
+      let rev_score = cur_tr.children().eq(1).find("input[name='rev_score']").val();
 
-      console.log("rno:" + rno);
-      console.log("reply:" + reply);
-      console.log("replyer:" + replyer);
+      // console.log("별 평점 : " + rev_score);
+
+      let displayStar = "";
+      for(let i=0; i<5; i++) {
+        if(i<rev_score) {
+          displayStar += "<a href='#' class='rev_score on'>";
+          displayStar += "★";
+        }else {
+          displayStar += "<a href='#' class='rev_score'>";
+          displayStar += "☆";
+        }
+        displayStar += "</a>"
+      }
+
+      let input_displayStar = "<input type='hidden' name='rev_score' value='" + rev_score + "'>";
+
+      let rev_content = cur_tr.children().eq(2).text();
+      let u_id = cur_tr.children().eq(3).text();
+      let rev_regdate = cur_tr.children().eq(4).text();
 
       // Edit버튼이 선택된 tr의 td를 모두 삭제한다.
       cur_tr.empty();
 
-      let rno_str = "<td><input type='text' id='edit_rno' value='" + rno + "' readonly></td>";
-      let reply_str = "<td><input type='text' id='edit_reply' value='" + reply + "'></td>";
-      let replyer_str = "<td><input type='text' id='edit_replyer' value='" + replyer + "' readonly></td>";
-      let regdate_str = "<td><input type='text' id='edit_regdate' value='" + regdate + "' readonly></td>";
+      let rev_no_str = "<td><input type='text' id='edit_rev_no' value='" + rev_no + "' readonly></td>";
+      let rev_score_str = "<td id='star_rev_score'>" + displayStar + input_displayStar + "</td>";
+      let rev_content_str = "<td><input type='text' id='edit_rev_content' value='" + rev_content + "'></td>";
+      let u_id_str = "<td>" + u_id + "</td>";
+      let rev_regdate_str = "<td>" + rev_regdate + "</td>";
 
-      let btn_str = "<td><button type='button' id='btn_re_cancel' class='btn btn-link'>취소</button>";
-      btn_str += "<button type='button' id='btn_re_register' class='btn btn-link'>등록</button></td>";
+      let btn_str = "<td><c:if test='${u_id != null}'><button type='button' id='btn_re_cancel' class='btn btn-link'>취소</button>";
+      btn_str += "<button type='button' id='btn_re_register' class='btn btn-link'>수정</button></c:if></td>";
 
-      cur_tr.append(rno_str, reply_str, replyer_str, regdate_str, btn_str);
+      cur_tr.append(rev_no_str, rev_score_str, rev_content_str, u_id_str, rev_regdate_str, btn_str);
 
+    });
+
+    $("div#replyList").on("click", "td#star_rev_score a.rev_score", function(e) {
+      e.preventDefault();
+
+      $(this).parent().children().removeClass("on");
+      $(this).addClass("on").prevAll("a").addClass("on");
     });
 
     //댓글 수정하기
     $("div#replyList").on("click", "#btn_re_register", function() {
-      let edit_rno = $("#edit_rno").val();
-      let edit_reply = $("#edit_reply").val();
-      let edit_replyer = $("#edit_replyer").val();
-      let edit_regdate = $("#edit_regdate").val();
+      let edit_rev_no = $("#edit_rev_no").val();
+      let edit_rev_content = $("#edit_rev_content").val();
+      let rev_score = 0;
 
-      let replyData = JSON.stringify({rno : edit_rno, replyer : edit_replyer, reply : edit_reply});
-      console.log("JSON데이터: " + replyData)
+      $("td#star_rev_score a.rev_score").each(function(index, item) {
+        if($(this).attr("class") == "rev_score on") {
+          rev_score += 1;
+        }
+      });
+
+      let reviewData = JSON.stringify({rev_no : edit_rev_no, rev_content : edit_rev_content, rev_score : rev_score});
+      console.log("JSON데이터: " + reviewData);
 
       $.ajax({
-        type: 'put',
-        url: '/replies/modify/',
+        type: 'patch',
+        url: '/review/modify/',
         headers: {
-          "Content-Type" : "application/json", "X-HTTP-Method-Override" : "PUT"
+          "Content-Type" : "application/json", "X-HTTP-Method-Override" : "PATCH"
         },
         dataType: 'text',
-        data: replyData,
+        data: reviewData,
         success: function(result) {
           if(result == "success") {
-            alert("댓글 수정 성공");
+            alert("상품후기 수정 성공");
 
             url = "/review/list/" + p_no + "/" + reviewPage + ".json";
 
@@ -408,29 +491,27 @@ $(document).ready(function() {
     // 댓글수정 취소하기
     $("div#replyList").on("click", "#btn_re_cancel", function() {
       let cur_tr = $(this).parent().parent();
-      let rno = cur_tr.find("#edit_rno").val();
-      let reply = cur_tr.find("#edit_reply").val();
-      let replyer = cur_tr.find("#edit_replyer").val();
-      let regdate = cur_tr.find("#edit_regdate").val();
+      let edit_rev_no = cur_tr.children().eq(0).find("#edit_rev_no").val();
+      let edit_star = cur_tr.children().eq(1).html();
+      // let edit_rev_score = cur_tr.children().eq(1).find("input[name='rev_score']").val();;
+      let edit_rev_content = cur_tr.children().eq(2).find("#edit_rev_content").val();
+      let edit_u_id = cur_tr.children().eq(3).text();
+      let edit_rev_regdate = cur_tr.children().eq(4).text();
 
-      let rno_str = "<td>" + rno + "</td>";
-      let reply_str = "<td>" + reply + "</td>";
-      let replyer_str = "<td>" + replyer + "</td>";
-      let regdate_str = "<td>" + regdate + "</td>";
-      /*
-      <td>
-        <button type="button" data-rno="{{rno}}" name="btn_re_edit" class="btn btn-link">Edit</button>
-        <button type="button" data-rno="{{rno}}" name="btn_re_delete" class="btn btn-link">Delete</button>
-      </td>
-      */
-      let btn_str = "<td><button type='button' data-rno=" + rno + " name='btn_re_edit' class='btn btn-link'>Edit</button>"
-      btn_str += "<button type='button' data-rno=" + rno + " name='btn_re_delete' class='btn btn-link'>Delete</button></td>"
+      let edit_rev_no_str = "<td>" + edit_rev_no + "</td>";
+      let edit_star_str = "<td>" + edit_star + "</td>";
+      let edit_rev_content_str = "<td>" + edit_rev_content + "</td>";
+      let edit_u_id_str = "<td>" + edit_u_id + "</td>";
+      let edit_rev_regdate_str = "<td>" + edit_rev_regdate + "</td>";
+
+      let btn_str = "<td><c:if test='${u_id != null}'><button type='button' data-rev_no=" + edit_rev_no + " name='btn_re_edit' class='btn btn-link'>Edit</button>"
+      btn_str += "<button type='button' data-rev_no=" + edit_rev_no + " name='btn_re_delete' class='btn btn-link'>Delete</button></c:if></td>"
       
       cur_tr.empty();
-      cur_tr.append(rno_str, reply_str, replyer_str, regdate_str, btn_str);
+      cur_tr.append(edit_rev_no_str, edit_star_str, edit_rev_content_str, edit_u_id_str, edit_rev_regdate_str, btn_str);
 
       /*
-      url = "/replies/pages/" + p_no + "/" + reviewPage + ".json";
+      url = "/review/pages/" + p_no + "/" + reviewPage + ".json";
 
       getPage(url);
       */
@@ -445,7 +526,7 @@ $(document).ready(function() {
 
       $.ajax({
         type: 'delete',
-        url: '/replies/delete/' + $(this).data("rno"),
+        url: '/review/delete/' + $(this).data("rno"),
         headers: {
           "Content-Type" : "application/json", "X-HTTP-Method-Override" : "DELETE"
         },
@@ -484,7 +565,7 @@ $(document).ready(function() {
 
         replyListInfo += "댓글 번호" + data.list[i].rno;
         replyListInfo += "댓글 내용: " + data.list[i].reply;
-        replyListInfo += "댓글 작성자: " + data.list[i].replyer;
+        replyListInfo += "댓글 작성자: " + data.list[i].reviewer;
         replyListInfo += "댓글 등록일: " + data.list[i].replydate;
         replyListInfo += "<hr>";
 
@@ -492,13 +573,13 @@ $(document).ready(function() {
       }
         */
 
-      printReplyData(data.list, $("#replyList"), $("#replyViewTemplate"));
-      printReplyPaging(data.pageMaker, $("#replyPaging"));
+      printreviewData(data.list, $("#replyList"), $("#replyViewTemplate"));
+      printreviewPaging(data.pageMaker, $("#reviewPaging"));
     });
   }
 
   // 댓글목록 출력기능. replyArr : 댓글목록데이터(json), target : 댓글삽입위치, template : 댓글디자인
-  function printReplyData(replayArr, target, template) {
+  function printreviewData(replayArr, target, template) {
     let templateObj = Handlebars.compile(template.html());
     let replyHtml = templateObj(replayArr); // 테이블과 댓글데이터가 바인딩된 결과
     target.empty();
@@ -508,7 +589,7 @@ $(document).ready(function() {
   }
 
     // 페이징 출력기능
-  function printReplyPaging(pageMaker, target) {
+  function printreviewPaging(pageMaker, target) {
     let pageInfoStr = "<nav aria-label='Page navigation example'>";
       pageInfoStr += '<ul class="pagination">';
     
