@@ -16,5 +16,7 @@ public interface ReviewMapper {
 	void create(ReviewVO vo);
 	// 상품 후기 수정
 	void modify(ReviewVO vo);
+	// 상품 후기 삭제
+	void delete(Integer rev_no);
 
 }

@@ -113,7 +113,7 @@
   		<p>수량 : <input type="text" id="cart_amt" value="1" style="width: 50px;"></p>
 		<button type="button" name="btn_fav" class="btn btn-link" data-p_no="${productVO.p_no }">찜하기</button>
 		<button type="button" name="btn_cart" class="btn btn-link" data-p_no="${productVO.p_no }">장바구니</button>
-		<button type="button" name="btn_direct_order" class="btn btn-link">바로구매</button>
+		<button type="button" name="btn_direct_order" class="btn btn-link" data-p_no="${productVO.p_no }">바로구매</button>
   	</div>
 	</div>
 		<ul class="nav nav-tabs text-center" id="productDetailTab" role="tablist">
@@ -135,6 +135,7 @@
 		  	<div id="pro_review">
 					<!--상품후기목록 및 페이징작업-->
 					<!--상품후기쓰기 폼-->
+          <c:if test="${loginStatus != null}">
 					<div class="row">
 						<div class="col-md-12">
 							<!-- <form role="form"> -->
@@ -142,7 +143,7 @@
 									<label for="exampleInputEmail1">상품 후기</label>
 									<div class="form-group row">
 										<div class="col-md-8">
-											<input type="text" class="form-control" id="rev_content" placeholder="상품후기를 작성하세요...">
+											<input type="text" class="form-control" name="rev_content" id="rev_content" placeholder="상품후기를 작성하세요...">
 											<p id="star_rev_score">
 												<a class="rev_score" href="#">☆</a>
 												<a class="rev_score" href="#">☆</a>
@@ -150,7 +151,7 @@
 												<a class="rev_score" href="#">☆</a>
 												<a class="rev_score" href="#">☆</a>
 											</p>
-											<input type="hidden" class="form-control" id="reviewer" value="${u_id}">
+											<input type="hidden" class="form-control" name="u_nic" id="reviewer" value="${loginStatus.u_nic}">
 										</div>
 										<div class="col-md-4">
 											<button type="button" id="btn_reviewWrite" class="btn btn-primary">등록</button>
@@ -160,7 +161,7 @@
 							<!-- </form> -->
 						</div>
 					</div>
-		
+        </c:if>		
 					<!-- 댓글 목록 및 페이징 작업 -->
 					<div id="replyList"></div>
 					<div id="reviewPaging"></div>
@@ -194,14 +195,9 @@
       <td>{{rev_no}}</td>
       <td>{{displayStar rev_score}} <input type="hidden" name="rev_score" value="{{rev_score}}"></td>
       <td>{{rev_content}}</td>
-      <td>{{u_id}}</td>
+      <td>{{u_nic}}</td>
       <td>{{convertDate rev_regdate}}</td>
-      <td>
-        <c:if test="${u_id != null}">
-          <button type="button" data-rev_no="{{rev_no}}" name="btn_re_edit" class="btn btn-link">Edit</button>
-          <button type="button" data-rev_no="{{rev_no}}" name="btn_re_delete" class="btn btn-link">Delete</button>
-        </c:if>
-      </td>
+      <td>{{authority u_nic rev_no}}</td>
     </tr>
     {{/each}}
   </table>
@@ -239,6 +235,16 @@
 
     return starStr;
   })
+
+  Handlebars.registerHelper("authority", function(u_nic, rev_no) {
+    let str = "";
+    let login_nic = '${loginStatus.u_nic}';
+    if(u_nic == login_nic) {
+      str +='<button type="button" data-rev_no=' + rev_no + ' name="btn_re_edit" class="btn btn-link">Edit</button>';
+      str +='<button type="button" data-rev_no=' + rev_no + ' name="btn_re_delete" class="btn btn-link">Delete</button>';
+    }
+    return new Handlebars.SafeString(str);
+  });
 </script>
   
   </body>
@@ -285,39 +291,21 @@ $(document).ready(function() {
 			}
 
 		});
-
-		$('#productDetailTab button').on('click', function (event) {
-		event.preventDefault()
-		$(this).tab('show')
-		});
 	});
+
+$('#productDetailTab button').on('click', function (event) {
+  event.preventDefault()
+  $(this).tab('show')
 });
-</script>
 
-<script>
+$("button[name='btn_direct_order']").on("click", function() {
 
-  $(document).ready(function() {
+  let url = "/cart/direct_cart_add?p_no=" + $(this).data("p_no") + "&cart_amt=1";
 
-    let actionForm = $("#actionForm"); // 페이징 정보가 있는 form태그
-    
-    //장바구니 클릭
-    $("button[name=btn_cart]").on("click", function() {
-		
-      $.ajax({
-        url:'/cart/cart_add',
-        type: 'post',
-        data: {p_no : $(this).data("p_no"), cart_amount : $("#pro_amount").val()},
-        success : function(result) {
-          alert("장바구니에 추가되었습니다.");
-          if(confirm("장바구니로 이동하겠습니까?")) {
-            location.href = "/cart/cart_list";
-          }
-        }
+  location.href = url;
 
-      });
-		});
-  });
-
+});
+});
 </script>
 
 <script>
@@ -353,6 +341,7 @@ $(document).ready(function() {
 
     // 댓글쓰기
     $("#btn_reviewWrite").on("click", function() {
+    let u_nic = $("#reviewer").val();
     let rev_content = $("#rev_content").val();
     let rev_score = 0;
 
@@ -373,7 +362,7 @@ $(document).ready(function() {
     }
 
     // {"p_no" : 255, "reviewer" : "나그네", "reply" : "255번 댓글 내용"}
-    let reviewData = JSON.stringify({p_no : ${productVO.p_no}, rev_content : rev_content, rev_score : rev_score});
+    let reviewData = JSON.stringify({p_no : ${productVO.p_no}, u_nic : u_nic, rev_content : rev_content, rev_score : rev_score});
 
     // console.log(reviewData);
 
@@ -426,7 +415,7 @@ $(document).ready(function() {
       let input_displayStar = "<input type='hidden' name='rev_score' value='" + rev_score + "'>";
 
       let rev_content = cur_tr.children().eq(2).text();
-      let u_id = cur_tr.children().eq(3).text();
+      let u_nic = cur_tr.children().eq(3).text();
       let rev_regdate = cur_tr.children().eq(4).text();
 
       // Edit버튼이 선택된 tr의 td를 모두 삭제한다.
@@ -435,13 +424,13 @@ $(document).ready(function() {
       let rev_no_str = "<td><input type='text' id='edit_rev_no' value='" + rev_no + "' readonly></td>";
       let rev_score_str = "<td id='star_rev_score'>" + displayStar + input_displayStar + "</td>";
       let rev_content_str = "<td><input type='text' id='edit_rev_content' value='" + rev_content + "'></td>";
-      let u_id_str = "<td>" + u_id + "</td>";
+      let u_nic_str = "<td>" + u_nic + "</td>";
       let rev_regdate_str = "<td>" + rev_regdate + "</td>";
 
-      let btn_str = "<td><c:if test='${u_id != null}'><button type='button' id='btn_re_cancel' class='btn btn-link'>취소</button>";
+      let btn_str = "<td><c:if test='${loginStatus.u_nic != null}'><button type='button' id='btn_re_cancel' class='btn btn-link'>취소</button>";
       btn_str += "<button type='button' id='btn_re_register' class='btn btn-link'>수정</button></c:if></td>";
 
-      cur_tr.append(rev_no_str, rev_score_str, rev_content_str, u_id_str, rev_regdate_str, btn_str);
+      cur_tr.append(rev_no_str, rev_score_str, rev_content_str, u_nic_str, rev_regdate_str, btn_str);
 
     });
 
@@ -495,20 +484,20 @@ $(document).ready(function() {
       let edit_star = cur_tr.children().eq(1).html();
       // let edit_rev_score = cur_tr.children().eq(1).find("input[name='rev_score']").val();;
       let edit_rev_content = cur_tr.children().eq(2).find("#edit_rev_content").val();
-      let edit_u_id = cur_tr.children().eq(3).text();
+      let edit_u_nic = cur_tr.children().eq(3).text();
       let edit_rev_regdate = cur_tr.children().eq(4).text();
 
       let edit_rev_no_str = "<td>" + edit_rev_no + "</td>";
       let edit_star_str = "<td>" + edit_star + "</td>";
       let edit_rev_content_str = "<td>" + edit_rev_content + "</td>";
-      let edit_u_id_str = "<td>" + edit_u_id + "</td>";
+      let edit_u_nic_str = "<td>" + edit_u_nic + "</td>";
       let edit_rev_regdate_str = "<td>" + edit_rev_regdate + "</td>";
 
-      let btn_str = "<td><c:if test='${u_id != null}'><button type='button' data-rev_no=" + edit_rev_no + " name='btn_re_edit' class='btn btn-link'>Edit</button>"
+      let btn_str = "<td><c:if test='${loginStatus.u_nic != null}'><button type='button' data-rev_no=" + edit_rev_no + " name='btn_re_edit' class='btn btn-link'>Edit</button>"
       btn_str += "<button type='button' data-rev_no=" + edit_rev_no + " name='btn_re_delete' class='btn btn-link'>Delete</button></c:if></td>"
       
       cur_tr.empty();
-      cur_tr.append(edit_rev_no_str, edit_star_str, edit_rev_content_str, edit_u_id_str, edit_rev_regdate_str, btn_str);
+      cur_tr.append(edit_rev_no_str, edit_star_str, edit_rev_content_str, edit_u_nic_str, edit_rev_regdate_str, btn_str);
 
       /*
       url = "/review/pages/" + p_no + "/" + reviewPage + ".json";
@@ -520,20 +509,19 @@ $(document).ready(function() {
 
     // 댓글 삭제하기
     $("div#replyList").on("click", "button[name='btn_re_delete']", function() {
-      console.log("댓글삭제");
 
-      if(!confirm("댓글 삭제를 하시겠습니까?")) return;
+      if(!confirm("후기를 삭제하시겠습니까?")) return;
 
       $.ajax({
         type: 'delete',
-        url: '/review/delete/' + $(this).data("rno"),
+        url: '/review/delete/' + $(this).data("rev_no"),
         headers: {
           "Content-Type" : "application/json", "X-HTTP-Method-Override" : "DELETE"
         },
         dataType: 'text',
         success: function(result) {
           if(result == "success") {
-            alert("댓글 삭제 성공");
+            alert("후기 삭제 성공");
 
             url = "/review/list/" + p_no + "/" + reviewPage + ".json";
 

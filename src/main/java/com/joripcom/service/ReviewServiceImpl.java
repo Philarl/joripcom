@@ -41,4 +41,10 @@ public class ReviewServiceImpl implements ReviewService {
 		
 	}
 
+	@Override
+	public void delete(Integer rev_no) {
+		reviewMapper.delete(rev_no);
+		
+	}
+
 }

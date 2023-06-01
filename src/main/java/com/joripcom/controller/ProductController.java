@@ -106,7 +106,6 @@ public class ProductController {
 			RWDTO rwThumbnail = rw_list.get(0);
 			rwThumbnail.setP_up_folder(rwThumbnail.getP_up_folder().replace("\\", "/"));
 			session.setAttribute("rwThumbnail", rwThumbnail);
-			model.addAttribute("u_id", u_id);
 		}
 	}
 	

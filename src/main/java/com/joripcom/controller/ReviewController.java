@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +53,7 @@ public class ReviewController {
 	}
 	
 	@PostMapping(value = "/new", consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> create(@RequestBody ReviewVO vo, HttpSession session) {
+	public ResponseEntity<String> create(@RequestBody ReviewVO vo) {
 		ResponseEntity<String> entity = null;
 		
 		reviewService.create(vo);
@@ -63,12 +64,24 @@ public class ReviewController {
 	}
 	
 	@PatchMapping(value = "/modify", consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
-	public ResponseEntity<String> modify(@RequestBody ReviewVO vo, HttpSession session) {
+	public ResponseEntity<String> modify(@RequestBody ReviewVO vo) {
 		ResponseEntity<String> entity = null;
 		
 		reviewService.modify(vo);
 		
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	@DeleteMapping(value = "/delete/{rev_no}", consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
+	public ResponseEntity<String> delete(@PathVariable("rev_no") Integer rev_no) {
+		ResponseEntity<String> entity = null;
+		
+		reviewService.delete(rev_no);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
 		
 		return entity;
 	}

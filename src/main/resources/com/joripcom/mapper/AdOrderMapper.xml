@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joripcom.mapper.AdOrderMapper">
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach collection="typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">p_name like '%' || #{keyword} || '%'</when>
+						<when test="type == 'P'.toString()">p_mfr like '%' || #{keyword} || '%'</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="orderList" resultType="com.joripcom.domain.OrderVO">
+		SELECT
+			RN, ord_no, u_id, ord_name, ord_zipcode, ord_addr, ord_addr_dtl, ord_phone, ord_email, ord_sum, order_date, pay_method
+		FROM (
+				SELECT /*+INDEX_DESC(ord_tbl pk_ord_no) */
+						ROWNUM RN, ord_no, u_id, ord_name, ord_zipcode, ord_addr, ord_addr_dtl, ord_phone, ord_email, ord_sum, order_date, pay_method
+				FROM
+					ord_tbl
+				WHERE
+					<include refid="criteria" />
+		<![CDATA[		
+					ROWNUM <= #{pageNum} * #{amount}
+			)
+		WHERE RN > (#{pageNum}-1) * #{amount}
+		]]>
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			ord_tbl
+		WHERE
+			<include refid="criteria" />
+			ord_no > 0
+	</select>
+	
+	<select id="orderDetail" resultType="com.joripcom.domain.AdOrderDetailVO">
+		SELECT
+			od.ord_no, od.p_no, od.od_amt, od.od_sum, p.p_name, p.p_up_folder, p.p_img
+		FROM
+			od_tbl od
+				INNER JOIN
+					p_tbl p 
+		ON
+			od.p_no = p.p_no
+		WHERE
+			od.ord_no = #{ord_no}
+	</select>
+</mapper>

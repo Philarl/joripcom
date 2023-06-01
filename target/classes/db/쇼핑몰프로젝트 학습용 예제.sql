@@ -480,8 +480,9 @@ COMMIT;
 DELETE FROM cart_tbl WHERE mbsp_id = 'user01';
 
 --5.주문내용 테이블
+DROP TABLE ORDER_TBL CASCADE CONSTRAINT;
 CREATE TABLE ORDER_TBL(
-        ORD_CODE            NUMBER                  PRIMARY KEY,
+        ORD_CODE            NUMBER CONSTRAINT PK_ORD_CODE PRIMARY KEY,
         MBSP_ID             VARCHAR2(15)            NOT NULL,
         ORD_NAME            VARCHAR2(30)            NOT NULL,
         ORD_ADDR_NUM        CHAR(5)                 NOT NULL,
@@ -490,6 +491,7 @@ CREATE TABLE ORDER_TBL(
         ORD_TEL             VARCHAR2(20)            NOT NULL,
         ORD_PRICE           NUMBER                  NOT NULL,
         ORD_REGDATE         DATE DEFAULT SYSDATE    NOT NULL,
+        PAY_METHOD          VARCHAR2(15)            NOT NULL,
         FOREIGN KEY(MBSP_ID) REFERENCES MBSP_TBL(MBSP_ID)
 );
 CREATE SEQUENCE SEQ_ORD_CODE;

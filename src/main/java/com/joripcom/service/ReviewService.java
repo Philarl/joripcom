@@ -15,4 +15,6 @@ public interface ReviewService {
 	
 	void modify(ReviewVO vo);
 
+	void delete(Integer rev_no);
+
 }
