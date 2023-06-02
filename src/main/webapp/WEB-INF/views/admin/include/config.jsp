@@ -54,4 +54,6 @@
           font-size: 3.5rem;
         }
       }
+  	th {text-align: center;}
+  	td {text-align: center;}
     </style>

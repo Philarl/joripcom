@@ -28,4 +28,6 @@ public interface MemberMapper {
 	void tempPW(@Param("u_id") String u_id, @Param("new_u_pw") String new_u_pw);
 	//찜목록 할인여부 확인
 	int check_fav_dc(String u_id);
+	//탈퇴한 회원 저장
+	void add_drop(MemberVO vo);
 }

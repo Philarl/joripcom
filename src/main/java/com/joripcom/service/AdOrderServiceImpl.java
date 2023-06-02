@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.joripcom.domain.AdOrderDetailVO;
 import com.joripcom.domain.Criteria;
@@ -19,21 +20,37 @@ public class AdOrderServiceImpl implements AdOrderService {
 	private AdOrderMapper adOrderMapper;
 
 	@Override
-	public List<OrderVO> orderList(Criteria cri) {
+	public List<OrderVO> orderList(Criteria cri, String sDate, String eDate) {
 		
-		return adOrderMapper.orderList(cri);
+		return adOrderMapper.orderList(cri, sDate, eDate);
 	}
 
 	@Override
-	public int getTotalCount(Criteria cri) {
+	public int getTotalCount(Criteria cri, String sDate, String eDate) {
 		
-		return adOrderMapper.getTotalCount(cri);
+		return adOrderMapper.getTotalCount(cri, sDate, eDate);
 	}
 
 	@Override
 	public List<AdOrderDetailVO> orderDetail(Integer ord_no) {
 		
 		return adOrderMapper.orderDetail(ord_no);
+	}
+
+	@Transactional
+	@Override
+	public void orderDetailDelete(Integer ord_no, Integer p_no) {
+		
+		adOrderMapper.orderDetailProductDelete(ord_no, p_no);
+		
+	}
+	
+	@Transactional
+	@Override
+	public void orderDelete(Integer ord_no) {
+		adOrderMapper.orderDeletePayment(ord_no);
+		adOrderMapper.orderDeleteDetail(ord_no);
+		adOrderMapper.orderInfoDelete(ord_no);
 	}
 
 }

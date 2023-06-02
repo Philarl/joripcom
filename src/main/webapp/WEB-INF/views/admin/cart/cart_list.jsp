@@ -84,17 +84,17 @@
               <!-- /.box-body -->
               <!-- [이전] 1 2 3 4 5 [다음] 출력작업 -->
               <div class="box-footer clearfix row">
-                <div class="col-md-12">
-                  <ul class="pagination justify-content-end">
+                <div class="col-md-11">
+                  <ul class="pagination pagination-sm no-margin pull-right">
                     <c:if test="${pageMaker.prev }">
-                      <li class="page-item"><a class="page-link" href="${pageMaker.startPage - 1}">[prev]</a></li>
+                      <li><a href="${pageMaker.startPage - 1}">[prev]</a></li>
                     </c:if>
                     
                     <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
-                      <li class="page-item" ${pageMaker.cri.pageNum == pageNum ? "class='active'": ""}><a class="page-link" href="${pageNum }">${pageNum }</a></li>
+                      <li ${pageMaker.cri.pageNum == pageNum ? "class='active'": ""}><a href="${pageNum }">${pageNum }</a></li>
                     </c:forEach>
                     <c:if test="${pageMaker.next }">
-                      <li class="page-item"><a class="page-link" href="${pageMaker.endPage + 1}">[next]</a></li>
+                      <li><a href="${pageMaker.endPage + 1}">[next]</a></li>
                     </c:if>
                   </ul>
                   <!-- 페이징정보. Criteria 클래스 필드정보작업 -->

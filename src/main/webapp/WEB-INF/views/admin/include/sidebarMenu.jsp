@@ -16,7 +16,10 @@
         </a>
         <div class="nav-item dropdown-menu">
           <a class="nav-link dropdown-item" href="/admin/order/order_list">주문목록</a>
+          <!-- TODO : 장바구니 관리, 찜목록 관리
           <a class="nav-link dropdown-item" href="#">장바구니 관리</a>
+          <a class="nav-link dropdown-item" href="#">찜목록 관리</a>
+          -->
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -33,6 +36,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           Customers
         </a>
+        <div class="nav-item dropdown-menu">
+          <a class="nav-link dropdown-item" href="/admin/member/member_list">회원목록</a>
+          <a class="nav-link dropdown-item" href="/admin/member/drop_list">탈퇴회원목록</a>
+        </div>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">

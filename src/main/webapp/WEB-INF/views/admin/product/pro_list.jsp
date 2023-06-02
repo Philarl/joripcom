@@ -31,84 +31,8 @@
 
 <div class="container-fluid">
   <div class="row">
-		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="sidebar-sticky pt-3">
-        <ul class="nav nav-tabs flex-column">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-              Dashboard <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-              Products
-            </a>
-				    <div class="nav-item dropdown-menu">
-				      <a class="nav-link dropdown-item" href="/admin/product/pro_insert">상품등록</a>
-				      <a class="nav-link dropdown-item" href="/admin/product/pro_list">상품목록</a>
-				    </div>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-              Integrations
-            </a>
-          </li>
-        </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Saved reports</span>
-          <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-          </a>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-              Current month
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-              Last quarter
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-              Social engagement
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-              Year-end sale
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <!-- sidebarMenu -->
+<%@include file="/WEB-INF/views/admin/include/sidebarMenu.jsp" %>
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
       <section class="content container-fluid">
@@ -149,7 +73,6 @@
                       <button type="submit" class="btn btn-success">검색</button>
                     </div>
                     <div class="col-md-3">
-                      <button type="button" id="btn_checkedModify" class="btn btn-primary">선택상품수정</button>
                       <button type="button" id="btn_checkedDelete" class="btn btn-primary">선택상품삭제</button>
                     </div>
                   </div>
@@ -160,7 +83,8 @@
                 <table class="table table-bordered" id="productList">
                   <tbody><tr>
                     <th style="width: 2%"><input type="checkbox" id="checkAll"></th>
-                    <th style="width: 55%">상품명</th>
+                    <th style="width: 110px;">이미지</th>
+                    <th style="width: auto">상품명</th>
                     <th style="width: 7%">가격</th>
                     <th style="width: 8%">판매여부</th>
                     <th style="width: 12%">등록일</th>
@@ -169,26 +93,28 @@
                   </tr>
                   <c:forEach items="${pro_list }" var="productVO">
                   <tr>
-                    <td><input type="checkbox" name="check" value="${productVO.p_no }"></td>
-                    <td>
-                      <input type="hidden" name="categ_cd" value="${productVO.categ_cd }">
-                      <input type="hidden" name="p_no" value="${productVO.p_no }">
+                    <td class="align-middle"><input type="checkbox" name="check" value="${productVO.p_no }"></td>
+                    <td class="align-middle">
                       <!-- 역슬래시 \ 가 클라이언트 요청데이타로 사용 불가능.-->
                       <img src="/admin/product/displayImage?folderName=${productVO.p_up_folder }&fileName=s_${productVO.p_img}" />
+                    </td>
+                    <td class="align-middle">
+                      <input type="hidden" name="categ_cd" value="${productVO.categ_cd }">
+                      <input type="hidden" name="p_no" value="${productVO.p_no }">
                       <c:out value="${productVO.p_name }" ></c:out>
                     </td>
-                    <td>
+                    <td class="align-middle">
                       <input type="text" name="p_px" style="width:100px" value="${productVO.p_px }">
                     </td>
-                    <td>
+                    <td class="align-middle">
                       <select id="p_purchasable" name="p_purchasable">
                         <option value="Y" ${productVO.p_purchasable == 'Y' ? 'selected':''}>판매가능</option>
                         <option value="N" ${productVO.p_purchasable == 'N' ? 'selected':''}>판매불가능</option>
                       </select>
                     </td>
-                    <td><fmt:formatDate value="${productVO.modify_date }" pattern="yyyy-MM-dd HH:mm"/></td>
-                    <td><button type="button" name="btn_productEdit" data-p_no="${productVO.p_no }" class="btn btn-link">수정</button></td>
-                    <td><button type="button" name="btn_productDel" data-p_no="${productVO.p_no }" class="btn btn-link">삭제</button></td>
+                    <td class="align-middle"><fmt:formatDate value="${productVO.modify_date }" pattern="yyyy-MM-dd HH:mm"/></td>
+                    <td class="align-middle"><button type="button" name="btn_productEdit" data-p_no="${productVO.p_no }" class="btn btn-link">수정</button></td>
+                    <td class="align-middle"><button type="button" name="btn_productDel" data-p_no="${productVO.p_no }" class="btn btn-link">삭제</button></td>
                   </tr>
                   </c:forEach>
                   
@@ -197,19 +123,21 @@
               <!-- /.box-body -->
               <!-- [이전] 1 2 3 4 5 [다음] 출력작업 -->
               <div class="box-footer clearfix row">
+                <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
+                </div>
                 <div class="col-md-11">
-                  <ul class="pagination pagination-sm no-margin pull-right">
+                  <ul class="pagination justify-content-end">
                     <c:if test="${pageMaker.prev }">
-                      <li><a href="${pageMaker.startPage - 1}">[prev]</a></li>
+                      <li class="page-item"><a class="page-link" href="${pageMaker.startPage - 1}">[prev]</a></li>
                     </c:if>
-                    
+
                     <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
-                      <li ${pageMaker.cri.pageNum == pageNum ? "class='active'": ""}><a href="${pageNum }">${pageNum }</a></li>
+                      <li class="page-item" ${pageMaker.cri.pageNum == pageNum ? "class='active'": ""}><a class="page-link" href="${pageNum }">${pageNum }</a></li>
                     </c:forEach>
                     
-                    
                     <c:if test="${pageMaker.next }">
-                      <li><a href="${pageMaker.endPage + 1}">[next]</a></li>
+                      <li class="page-item"><a class="page-link" href="${pageMaker.endPage + 1}">[next]</a></li>
                     </c:if>
                   </ul>
                   <!-- 페이징정보. Criteria 클래스 필드정보작업 -->
@@ -219,9 +147,6 @@
                     <input type="hidden" name="type" value="${pageMaker.cri.type}">
                     <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
                   </form>
-                </div>
-                <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
                 </div>
               </div>
             </div>

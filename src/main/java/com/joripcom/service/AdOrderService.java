@@ -8,10 +8,13 @@ import com.joripcom.domain.OrderVO;
 
 public interface AdOrderService {
 	
-	List<OrderVO> orderList(Criteria cri);
+	List<OrderVO> orderList(Criteria cri, String sDate, String eDate);
 	
-	int getTotalCount(Criteria cri);
+	int getTotalCount(Criteria cri, String sDate, String eDate);
 	
 	List<AdOrderDetailVO> orderDetail(Integer ord_no);
-
+	
+	void orderDetailDelete(Integer ord_no, Integer p_no);
+	
+	void orderDelete(Integer ord_no);
 }

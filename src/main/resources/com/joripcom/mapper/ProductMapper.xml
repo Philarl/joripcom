@@ -59,7 +59,7 @@
 		<trim suffix=" AND ">
 			<if test="price.px_max != '' and price.px_max != null">
 <![CDATA[
-				p_px <= #{price.px_max}
+				p_px < #{price.px_max} + 1
 ]]>
 			</if>
 		</trim>

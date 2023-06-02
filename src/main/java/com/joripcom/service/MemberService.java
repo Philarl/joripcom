@@ -29,4 +29,5 @@ public interface MemberService {
 	
 	int check_fav_dc(String u_id);
 
+	void add_drop(MemberVO vo);
 }

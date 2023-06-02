@@ -48,8 +48,6 @@ public class MemberController {
 	@Setter(onMethod_ = {@Autowired})
 	private PasswordEncoder passwordEncoder;
 	
-	
-	
 	//아이디 중복체크
 	@GetMapping("/idCheck")
 	@ResponseBody
@@ -336,9 +334,10 @@ public class MemberController {
 		String u_id = vo.getU_id();
 		String check_u_pw = vo.getU_pw();
 
-//		--TODO-- 카카오 유저는 비밀번호 입력 없이 회원탈퇴 진행
 		if(session.getAttribute("kakaoLoginStatus") == null) {
 			if(passwordEncoder.matches(u_pw, check_u_pw)) {
+//				TODO : 오라클 트리거 기능으로 회원 탈퇴 -> 탈퇴 회원 목록 체크
+				memberService.add_drop(memberService.login(u_id));
 				memberService.delete(u_id);
 				
 				body = "delete";
@@ -347,6 +346,7 @@ public class MemberController {
 				body = "failPW";
 			}
 		}else {
+			memberService.add_drop(memberService.login(u_id));
 			memberService.delete(u_id);
 			
 			body = "delete";
