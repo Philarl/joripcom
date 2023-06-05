@@ -107,11 +107,4 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.check_fav_dc(u_id);
 	}
 
-//	TODO : Transactional로 회원 탈퇴 -> 탈퇴 회원 목록 추가 기능 묶기
-	@Override
-	public void add_drop(MemberVO vo) {
-		memberMapper.add_drop(vo);
-		
-	}
-
 }

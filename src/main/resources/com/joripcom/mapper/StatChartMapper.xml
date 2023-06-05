@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joripcom.mapper.StatChartMapper">
+<select id="getFirstCategoryOrderPrice" resultType="com.joripcom.dto.StatChartDTO">
+	SELECT
+		c.categ_name AS categoryname, sum(od.od_amt * od.od_sum) AS orderprice
+	FROM
+		p_tbl p, od_tbl od,
+	  (
+	  SELECT
+	  	p.categ_name, c.categ_cd
+    FROM
+    	categ_tbl c, categ_tbl p
+    WHERE
+    	c.par_categ_cd = p.categ_cd
+    ) c
+	WHERE
+		p.p_no = od.p_no
+	AND
+		p.categ_cd = c.categ_cd
+	GROUP BY
+		c.categ_name
+	ORDER BY
+		c.categ_name
+</select>
+
+<select id="firstCategoryChart" resultMap="firstCategoryMapList">
+	SELECT
+		c.categ_name AS categoryname, sum(od.od_amt * od.od_sum) AS orderprice
+	FROM
+		p_tbl p, od_tbl od,
+	  (
+	  SELECT
+	  	p.categ_name, c.categ_cd
+    FROM
+    	categ_tbl c, categ_tbl p
+    WHERE
+    	c.par_categ_cd = p.categ_cd
+    ) c
+	WHERE
+		p.p_no = od.p_no
+	AND
+		p.categ_cd = c.categ_cd
+	GROUP BY
+		c.categ_name
+	ORDER BY
+		c.categ_name
+</select>
+
+<resultMap type="map" id="firstCategoryMapList">
+	<result column="categoryname" property="categoryname"></result>
+	<result column="orderprice" property="orderprice"></result>
+</resultMap>
+</mapper>

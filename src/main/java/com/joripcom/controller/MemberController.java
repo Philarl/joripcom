@@ -336,8 +336,6 @@ public class MemberController {
 
 		if(session.getAttribute("kakaoLoginStatus") == null) {
 			if(passwordEncoder.matches(u_pw, check_u_pw)) {
-//				TODO : 오라클 트리거 기능으로 회원 탈퇴 -> 탈퇴 회원 목록 체크
-				memberService.add_drop(memberService.login(u_id));
 				memberService.delete(u_id);
 				
 				body = "delete";
@@ -346,21 +344,11 @@ public class MemberController {
 				body = "failPW";
 			}
 		}else {
-			memberService.add_drop(memberService.login(u_id));
 			memberService.delete(u_id);
 			
 			body = "delete";
 			session.invalidate();
 		}
-		
-//		if(passwordEncoder.matches(u_pw, check_u_pw)) {
-//			memberService.delete(u_id);
-//			
-//			body = "delete";
-//			session.invalidate();
-//		}else {
-//			body = "failPW";
-//		}
 		
 		entity = new ResponseEntity<String>(body, HttpStatus.OK);
 		

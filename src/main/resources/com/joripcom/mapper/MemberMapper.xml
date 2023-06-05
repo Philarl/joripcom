@@ -80,9 +80,4 @@
 			f.u_id = #{u_id} and
 			p.p_dc > 0
 	</select>
-	
-	<insert id="add_drop">
-		insert into udrop_tbl (u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx)
-		values (#{u_id}, #{u_name}, #{u_pw}, #{u_email}, #{u_zipcode}, #{u_addr}, #{u_addr_dtl}, #{u_phone}, #{u_nic}, #{check_email_rx})
-	</insert>
 </mapper>

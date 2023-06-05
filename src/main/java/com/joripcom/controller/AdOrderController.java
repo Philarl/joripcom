@@ -63,6 +63,7 @@ public class AdOrderController {
 		return FileUtils.getFile(uploadPath + folderName, fileName);
 	}
 	
+//	TODO : 상품 삭제 시 주문, 결제 내역에서 금액 등 부분 수정 update
 	@PostMapping("/order_detail_product_delete")
 	@ResponseBody
 	public ResponseEntity<String> orderDetailProductDelete(Integer ord_no, Integer p_no) {

@@ -26,20 +26,32 @@ CREATE TABLE U_TBL(
 -- 탈퇴 회원 테이블
 DROP TABLE UDROP_TBL CASCADE CONSTRAINTS;
 CREATE TABLE UDROP_TBL(
-    U_ID            VARCHAR2(20)            CONSTRAINT PK_UDROP_ID PRIMARY KEY,
+    U_ID            VARCHAR2(20)            NOT NULL,
     U_NAME          VARCHAR2(30)            NOT NULL,
     U_PW            VARCHAR2(60)            NOT NULL,
-    U_EMAIL         VARCHAR2(30) UNIQUE     NOT NULL,
+    U_EMAIL         VARCHAR2(30)            NOT NULL,
     U_ZIPCODE       VARCHAR2(10)            NOT NULL,
     U_ADDR          VARCHAR2(100)           NOT NULL,
     U_ADDR_DTL      VARCHAR2(100)           NOT NULL,
     U_PHONE         VARCHAR2(15)            NOT NULL,
-    U_NIC           VARCHAR2(20) UNIQUE     NOT NULL,
+    U_NIC           VARCHAR2(20)            NOT NULL,
     CHECK_EMAIL_RX  CHAR(1) DEFAULT 'N'     NOT NULL,
     U_GRADE         CHAR(1) DEFAULT 0       NOT NULL,
     U_PTS           NUMBER DEFAULT 0        NOT NULL,
     DROP_DATE       DATE DEFAULT SYSDATE    NOT NULL
 );
+
+-- 회원 탈퇴 트리거
+CREATE OR REPLACE TRIGGER tr_u_udrop_tbl
+BEFORE DELETE ON u_tbl
+FOR EACH ROW
+    BEGIN
+    IF DELETING THEN
+        INSERT INTO udrop_tbl(u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts)
+        VALUES (:OLD.u_id, :OLD.u_name, :OLD.u_pw, :OLD.u_email, :OLD.u_zipcode, :OLD.u_addr, :OLD.u_addr_dtl, :OLD.u_phone, :OLD.u_nic, :OLD.check_email_rx, :OLD.u_grade, :OLD.u_pts);
+    END IF;
+END tr_u_udrop_tbl;
+
 
 -- 2. 카테고리 테이블
 DROP TABLE CATEG_TBL CASCADE CONSTRAINTS;
@@ -338,6 +350,74 @@ CREATE TABLE PAY_TBL (
 );
 DROP SEQUENCE seq_pay_no;
 CREATE SEQUENCE seq_pay_no;
+
+-- 주문이 존재하는 날짜와 주문이 없는 날짜도 포함하여, 조회(일별통계)
+SELECT TO_CHAR(b.dt, 'YYYY-MM-DD') as orderdate, NVL(SUM(a.cnt), 0) cnt
+FROM
+    (
+    -- 존재하는 데이터(통계)
+    SELECT TO_CHAR(order_date, 'YYYY-MM-DD') AS orderdate, COUNT(*) cnt
+    FROM ord_tbl
+    WHERE order_date BETWEEN TO_DATE('2023-06-01', 'YYYY-MM-DD') AND
+                            TO_DATE('2023-06-30', 'YYYY-MM-DD')
+    GROUP BY TO_CHAR(order_date, 'YYYY-MM-DD')
+    ) a,
+    (
+    -- 가상데이터
+    SELECT TO_DATE('2023-06-01', 'YYYY-MM-DD') + LEVEL - 1 AS dt
+    FROM DUAL
+    CONNECT BY LEVEL <= (TO_DATE('2023-06-30', 'YYYY-MM-DD') - TO_DATE('2023-06-01', 'YYYY-MM-DD') + 1)
+    ) b
+WHERE b.dt = a.orderdate(+)
+GROUP BY b.dt
+ORDER BY b.dt;
+
+-- 주문이 존재하는 날짜와 주문이 없는 날짜도 포함하여, 조회(월별통계)
+SELECT TO_CHAR(b.dt, 'YYYY-MM') as orderdate, NVL(SUM(a.cnt), 0) cnt
+FROM
+    (
+    -- 존재하는 데이터(통계)
+    SELECT TO_CHAR(order_date, 'YYYY-MM-DD') AS orderdate, COUNT(*) cnt
+    FROM ord_tbl
+    WHERE order_date BETWEEN TO_DATE('2023-01-01', 'YYYY-MM-DD') AND
+                            TO_DATE('2023-12-31', 'YYYY-MM-DD')
+    GROUP BY TO_CHAR(order_date, 'YYYY-MM-DD')
+    ) a,
+    (
+    -- 가상데이터
+    SELECT TO_DATE('2023-01-01', 'YYYY-MM-DD') + LEVEL - 1 AS dt
+    FROM DUAL
+    CONNECT BY LEVEL <= (TO_DATE('2023-12-31', 'YYYY-MM-DD') - TO_DATE('2023-01-01', 'YYYY-MM-DD') + 1)
+    ) b
+WHERE b.dt = a.orderdate(+)
+GROUP BY TO_CHAR(b.dt, 'YYYY-MM')
+ORDER BY TO_CHAR(b.dt, 'YYYY-MM');
+
+/*----------- demo 데이터베이스 참조*/
+-- 1차 카테고리별 매출(전체)
+-- 분석 : 주문테이블, 상품테이블, 카테고리테이블
+-- 포인트 : 상품테이블은 2차카테고리 코드가 존재하고, 1차카테고리는 존재하지 않는다.
+-- 주문 상품의 2차카테고리를 이용하여, 1차카테고리를 파악해야 한다.
+-- self join : 하나의 테이블을 별칭 2개로 사용하여, 조인
+-- 주문 상품의 1차카테고리이름과 2차카테고리코드
+SELECT c.categ_name AS categoryname, sum(od.od_amt * od.od_sum) AS orderprice
+FROM p_tbl p, od_tbl od,
+    (SELECT p.categ_name, c.categ_cd
+    FROM categ_tbl c, categ_tbl p
+    WHERE c.par_categ_cd = p.categ_cd) c
+WHERE p.p_no = od.p_no
+AND p.categ_cd = c.categ_cd
+GROUP BY c.categ_name
+ORDER BY c.categ_name;
+
+-- 1차 카테고리별 매출 비율(월별)
+
+-- 2차 카테고리별 매출 (카테고리명으로 출력)
+
+-- 2차 카테고리별 매출 비율(월별)
+
+-- 월별
+
 
 -- 7. 게시판 테이블
 DROP TABLE BRD_TBL CASCADE CONSTRAINTS;
