@@ -13,7 +13,7 @@ public class OrderDetailVO {
 	    ORD_NO  NUMBER,
 	    P_NO    NUMBER,
 	    OD_AMT  NUMBER  NOT NULL,
-	    OD_SUM  NUMBER  NOT NULL,
+	    OD_PX  NUMBER  NOT NULL,
 	    FOREIGN KEY (ORD_NO) REFERENCES ORD_TBL (ORD_NO),
 	    FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO)
 	);
@@ -22,6 +22,6 @@ public class OrderDetailVO {
 	private Integer ord_no;
 	private Integer p_no;
 	private Integer od_amt;
-	private Integer od_sum;
+	private Integer od_px;
 
 }

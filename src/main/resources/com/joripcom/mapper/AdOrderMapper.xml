@@ -69,7 +69,7 @@
 	
 	<select id="orderDetail" resultType="com.joripcom.domain.AdOrderDetailVO">
 		SELECT
-			od.ord_no, od.p_no, od.od_amt, od.od_sum, p.p_name, p.p_up_folder, p.p_img
+			od.ord_no, od.p_no, od.od_amt, od.od_px, p.p_name, p.p_up_folder, p.p_img
 		FROM
 			od_tbl od
 				INNER JOIN
@@ -88,6 +88,24 @@
 		AND
 			p_no = #{p_no}
 	</delete>
+	
+	<update id="modifyPaymentODPD">
+		UPDATE
+			pay_tbl
+		SET
+			pay_px = #{p_vo.pay_px} - (#{od_amt} * #{od_px})
+		WHERE
+			ord_no = #{ord_no}
+	</update>
+	
+	<update id="modifyOrderODPD">
+		UPDATE
+			ord_tbl
+		SET
+			ord_sum = #{o_vo.ord_sum} - (#{od_amt} * #{od_px})
+		WHERE
+			ord_no = #{ord_no}
+	</update>
 	
 	<delete id="orderDeletePayment">
 		DELETE FROM

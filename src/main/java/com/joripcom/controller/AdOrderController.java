@@ -18,8 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.joripcom.domain.AdOrderDetailVO;
 import com.joripcom.domain.Criteria;
+import com.joripcom.domain.OrderDetailVO;
 import com.joripcom.domain.OrderVO;
 import com.joripcom.domain.PageDTO;
+import com.joripcom.domain.PaymentVO;
 import com.joripcom.service.AdOrderService;
 import com.joripcom.util.FileUtils;
 
@@ -63,13 +65,15 @@ public class AdOrderController {
 		return FileUtils.getFile(uploadPath + folderName, fileName);
 	}
 	
-//	TODO : 상품 삭제 시 주문, 결제 내역에서 금액 등 부분 수정 update
+	// TODO : 주문상세 상품 삭제 작업
 	@PostMapping("/order_detail_product_delete")
 	@ResponseBody
-	public ResponseEntity<String> orderDetailProductDelete(Integer ord_no, Integer p_no) {
+	public ResponseEntity<String> orderDetailProductDelete(Integer ord_no, Integer p_no, Integer od_amt, Integer od_px, PaymentVO p_vo, OrderVO o_vo) {
 		ResponseEntity<String> entity = null;
 		
-		adOrderService.orderDetailDelete(ord_no, p_no);
+		log.info("" + ord_no + p_no + od_amt + od_px + p_vo + o_vo);
+		
+		adOrderService.orderDetailDelete(ord_no, p_no, od_amt, od_px, p_vo, o_vo);
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
 		return entity;
 	}

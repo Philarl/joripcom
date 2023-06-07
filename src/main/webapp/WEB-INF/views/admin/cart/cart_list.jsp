@@ -143,7 +143,7 @@
       </td>
       <td class="align-middle"><img src="{{imageview p_up_folder p_img}}"></td>
       <td class="align-middle">{{p_name}}</td>
-      <td class="align-middle">{{od_sum}}</td>
+      <td class="align-middle">{{od_px}}</td>
       <td class="align-middle">{{od_amt}}</td>
       <td class="align-middle">주문금액</td>
       <td class="align-middle">상태</td>

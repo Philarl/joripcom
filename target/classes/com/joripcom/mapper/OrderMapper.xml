@@ -17,7 +17,7 @@
 	
 	<insert id="order_detail_save">
 		INSERT INTO od_tbl
-			(ord_no, p_no, od_amt, od_sum)
+			(ord_no, p_no, od_amt, od_px)
 		(
 			SELECT
 				#{ord_no}, c.p_no, c.cart_amt, p.p_px

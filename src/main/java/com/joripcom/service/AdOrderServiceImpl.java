@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.joripcom.domain.AdOrderDetailVO;
 import com.joripcom.domain.Criteria;
 import com.joripcom.domain.OrderVO;
+import com.joripcom.domain.PaymentVO;
 import com.joripcom.mapper.AdOrderMapper;
 
 import lombok.Setter;
@@ -39,9 +40,10 @@ public class AdOrderServiceImpl implements AdOrderService {
 
 	@Transactional
 	@Override
-	public void orderDetailDelete(Integer ord_no, Integer p_no) {
-		
+	public void orderDetailDelete(Integer ord_no, Integer p_no, Integer od_amt, Integer od_px, PaymentVO p_vo, OrderVO o_vo) {
 		adOrderMapper.orderDetailProductDelete(ord_no, p_no);
+		adOrderMapper.modifyPaymentODPD(ord_no, od_amt, od_px, p_vo);
+		adOrderMapper.modifyOrderODPD(ord_no, od_amt, od_px, o_vo);
 		
 	}
 	

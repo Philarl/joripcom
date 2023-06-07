@@ -5,7 +5,7 @@
 <mapper namespace="com.joripcom.mapper.StatChartMapper">
 <select id="getFirstCategoryOrderPrice" resultType="com.joripcom.dto.StatChartDTO">
 	SELECT
-		c.categ_name AS categoryname, sum(od.od_amt * od.od_sum) AS orderprice
+		c.categ_name AS categoryname, sum(od.od_amt * od.od_px) AS orderprice
 	FROM
 		p_tbl p, od_tbl od,
 	  (
@@ -28,7 +28,7 @@
 
 <select id="firstCategoryChart" resultMap="firstCategoryMapList">
 	SELECT
-		c.categ_name AS categoryname, sum(od.od_amt * od.od_sum) AS orderprice
+		c.categ_name AS categoryname, sum(od.od_amt * od.od_px) AS orderprice
 	FROM
 		p_tbl p, od_tbl od,
 	  (

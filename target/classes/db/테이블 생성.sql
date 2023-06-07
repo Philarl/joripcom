@@ -24,8 +24,8 @@ CREATE TABLE U_TBL(
 );
 
 -- 탈퇴 회원 테이블
-DROP TABLE UDROP_TBL CASCADE CONSTRAINTS;
-CREATE TABLE UDROP_TBL(
+DROP TABLE BACKUP_U_TBL CASCADE CONSTRAINTS;
+CREATE TABLE BACKUP_U_TBL(
     U_ID            VARCHAR2(20)            NOT NULL,
     U_NAME          VARCHAR2(30)            NOT NULL,
     U_PW            VARCHAR2(60)            NOT NULL,
@@ -42,15 +42,15 @@ CREATE TABLE UDROP_TBL(
 );
 
 -- 회원 탈퇴 트리거
-CREATE OR REPLACE TRIGGER tr_u_udrop_tbl
-BEFORE DELETE ON u_tbl
+CREATE OR REPLACE TRIGGER tr_backup_u_tbl
+AFTER DELETE ON u_tbl
 FOR EACH ROW
     BEGIN
     IF DELETING THEN
-        INSERT INTO udrop_tbl(u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts)
+        INSERT INTO backup_u_tbl(u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts)
         VALUES (:OLD.u_id, :OLD.u_name, :OLD.u_pw, :OLD.u_email, :OLD.u_zipcode, :OLD.u_addr, :OLD.u_addr_dtl, :OLD.u_phone, :OLD.u_nic, :OLD.check_email_rx, :OLD.u_grade, :OLD.u_pts);
     END IF;
-END tr_u_udrop_tbl;
+END tr_backup_u_tbl;
 
 
 -- 2. 카테고리 테이블
@@ -328,7 +328,7 @@ CREATE TABLE OD_TBL(
     ORD_NO  NUMBER,
     P_NO    NUMBER,
     OD_AMT  NUMBER  NOT NULL,
-    OD_SUM  NUMBER  NOT NULL,
+    OD_PX  NUMBER  NOT NULL,
     FOREIGN KEY (ORD_NO) REFERENCES ORD_TBL (ORD_NO),
     FOREIGN KEY (P_NO) REFERENCES P_TBL (P_NO)
 );
@@ -400,7 +400,7 @@ ORDER BY TO_CHAR(b.dt, 'YYYY-MM');
 -- 주문 상품의 2차카테고리를 이용하여, 1차카테고리를 파악해야 한다.
 -- self join : 하나의 테이블을 별칭 2개로 사용하여, 조인
 -- 주문 상품의 1차카테고리이름과 2차카테고리코드
-SELECT c.categ_name AS categoryname, sum(od.od_amt * od.od_sum) AS orderprice
+SELECT c.categ_name AS categoryname, sum(od.od_amt * od.od_px) AS orderprice
 FROM p_tbl p, od_tbl od,
     (SELECT p.categ_name, c.categ_cd
     FROM categ_tbl c, categ_tbl p
