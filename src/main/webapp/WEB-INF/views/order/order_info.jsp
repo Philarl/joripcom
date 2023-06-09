@@ -93,7 +93,7 @@
 						<td>
 						<input type="hidden" name="cart_no" value="${cartListDTO.cart_no }">
 						<a class="move" href="${cartListDTO.p_no}"><img src="/cart/displayImage?folderName=${cartListDTO.p_up_folder }&fileName=s_${cartListDTO.p_img }"></a>
-						<a class="move" href="${cartListDTO.p_no}"><c:out value="${cartListDTO.p_name }" /></a>
+						<a class="move" id="p_name" href="${cartListDTO.p_no}"><c:out value="${cartListDTO.p_name }" /></a>
 						</td>
 						<td>
 							<input type="text" name="cart_amt" value="${cartListDTO.cart_amt }">
@@ -392,6 +392,17 @@ $(document).ready(function() {
           console.log("무통장입금 완료?");
 						location.href = "/order/orderComplete";
 					}
+				},
+				error : function(xhr, textStatus, error) {
+					if(xhr.responseText.includes("ORA-20001")) {
+						let p_name = $("#p_name").text();
+						console.log(xhr.responseText);
+						// console.log(p_name);
+						alert(p_name + "의 재고가 부족합니다.")
+					}
+					// console.log(xhr);
+					// console.log(textStatus);
+					// console.log(error);
 				}
 
 			});

@@ -53,5 +53,21 @@
 		<beans:constructor-arg value="TC0ONETIME" />
 	</beans:bean>
 	
+	<!-- 인터셉터 설정 -->
+	<beans:bean id="loginInterceptor" class="com.joripcom.interceptor.LoginInterceptor" />
+	
+	<interceptors>
+		<interceptor>
+			<mapping path="/member/mypage"/>
+			<mapping path="/member/modify"/>
+			<mapping path="/cart/*"/>
+			<mapping path="/order/*"/>
+			
+			<exclude-mapping path="/cart/disaplyImage"/>
+			
+			<beans:ref bean="loginInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
 	
 </beans:beans>

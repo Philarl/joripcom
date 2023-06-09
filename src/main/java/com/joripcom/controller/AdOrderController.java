@@ -65,16 +65,20 @@ public class AdOrderController {
 		return FileUtils.getFile(uploadPath + folderName, fileName);
 	}
 	
-	// TODO : 주문상세 상품 삭제 작업
 	@PostMapping("/order_detail_product_delete")
 	@ResponseBody
 	public ResponseEntity<String> orderDetailProductDelete(Integer ord_no, Integer p_no, Integer od_amt, Integer od_px, PaymentVO p_vo, OrderVO o_vo) {
 		ResponseEntity<String> entity = null;
 		
-		log.info("" + ord_no + p_no + od_amt + od_px + p_vo + o_vo);
+//		log.info(adOrderService.getOrder(ord_no).getOrd_sum());
+		
+		p_vo = adOrderService.getPayment(ord_no);
+		o_vo = adOrderService.getOrder(ord_no);
 		
 		adOrderService.orderDetailDelete(ord_no, p_no, od_amt, od_px, p_vo, o_vo);
+		
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		log.info(entity);
 		return entity;
 	}
 	

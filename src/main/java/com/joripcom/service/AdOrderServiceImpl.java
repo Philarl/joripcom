@@ -55,4 +55,16 @@ public class AdOrderServiceImpl implements AdOrderService {
 		adOrderMapper.orderInfoDelete(ord_no);
 	}
 
+	@Override
+	public PaymentVO getPayment(Integer ord_no) {
+		
+		return adOrderMapper.getPayment(ord_no);
+	}
+
+	@Override
+	public OrderVO getOrder(Integer ord_no) {
+		
+		return adOrderMapper.getOrder(ord_no);
+	}
+
 }

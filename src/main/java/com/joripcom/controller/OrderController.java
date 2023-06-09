@@ -16,7 +16,6 @@ import com.joripcom.domain.MemberVO;
 import com.joripcom.domain.OrderVO;
 import com.joripcom.domain.PaymentVO;
 import com.joripcom.dto.CartDTO;
-import com.joripcom.kakaopay.ApproveResponse;
 import com.joripcom.kakaopay.ReadyResponse;
 import com.joripcom.service.CartService;
 import com.joripcom.service.KakaoPayService;

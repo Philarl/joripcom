@@ -96,6 +96,7 @@ public class CartController {
 		
 		if(cartService.cart_amount_change(cart_no, cart_amt) == 1) {
 			entity = new ResponseEntity<String>("success", HttpStatus.OK);
+//			log.info(entity);
 		}else {
 			entity = new ResponseEntity<String>("fail", HttpStatus.OK);
 		}

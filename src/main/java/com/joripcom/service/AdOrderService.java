@@ -16,6 +16,10 @@ public interface AdOrderService {
 	List<AdOrderDetailVO> orderDetail(Integer ord_no);
 	
 	void orderDetailDelete(Integer ord_no, Integer p_no, Integer od_amt, Integer od_px, PaymentVO p_vo, OrderVO o_vo);
+
+	PaymentVO getPayment(Integer ord_no);
+
+	OrderVO getOrder(Integer ord_no);
 	
 	void orderDelete(Integer ord_no);
 }

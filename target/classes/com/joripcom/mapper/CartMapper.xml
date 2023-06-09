@@ -23,7 +23,7 @@
 
 <select id="cart_list" resultType="com.joripcom.dto.CartDTO">
 	SELECT
-    ROWNUM rn, c.cart_no, c.p_no, c.u_id, c.cart_amt, p.p_up_folder, p.p_img, p.p_img, p.p_px, (p.p_px * c.cart_amt) as sum
+    ROWNUM rn, c.cart_no, c.p_no, c.u_id, c.cart_amt, p.p_up_folder, p.p_img, p.p_img, p.p_name, p.p_px, (p.p_px * c.cart_amt) as sum
 	FROM
 	    p_tbl p
 	        INNER JOIN

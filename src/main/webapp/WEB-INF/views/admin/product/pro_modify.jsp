@@ -106,11 +106,13 @@
               <div class="form-group row">
                 <label for="p_amt" class="col-sm-2 col-form-label">수량</label>
                 <div class="col-sm-4">
+                  <input type="hidden" id="check_amt" value="<c:out value='${productVO.p_amt }' />">
                   <input type="text" class="form-control" id="p_amt" name="p_amt" value="<c:out value='${productVO.p_amt }' />">
                 </div>
                 <label for="p_purchasable" class="col-sm-2 col-form-label">판매여부</label>
                 <div class="col-sm-4">
                   <select id="p_purchasable" name="p_purchasable">
+
                     <option value="Y" ${productVO.p_purchasable == 'Y' ? 'selected' : ''}>판매중</option>
                     <option value="N" ${productVO.p_purchasable == 'N' ? 'selected' : ''}>품절</option>
                   </select>
@@ -187,6 +189,19 @@
       }
 
       reader.readAsDataURL(file); // reader객체에 파일객체를 할당
+    });
+
+    $("#btn_productInsert").click(function() {
+
+      if($("#p_amt").val() == 0) {
+        $("#p_purchasable").children().remove();
+        $("#p_purchasable").append("<option value='N' ${productVO.p_purchasable == 'N' ? 'selected' : ''}>품절</option>");
+      }
+
+      if(($("#p_amt").val() > 0) && ($("#check_amt").val() == 0)) {
+        $("#p_purchasable").children().remove();
+        $("#p_purchasable").append("<option value='Y' ${productVO.p_purchasable == 'Y' ? 'selected' : ''}>판매중</option>");
+      }
     });
 
   });

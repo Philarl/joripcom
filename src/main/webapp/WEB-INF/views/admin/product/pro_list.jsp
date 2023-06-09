@@ -200,9 +200,13 @@
  
      $("button[name='btn_productEdit']").on("click", function() {
 
+       actionForm.find("input[name='p_no']").remove();
+       actionForm.find("input[name='categ_cd']").remove();
+
        actionForm.append("<input type='hidden' name='p_no' value='" + $(this).data("p_no") + "'>");
 
        let categ_cd = $(this).parent().parent().find("input[name='categ_cd']").val();
+
        actionForm.append("<input type='hidden' name='categ_cd' value='" + categ_cd + "'>");
        
        actionForm.attr("method", "get");

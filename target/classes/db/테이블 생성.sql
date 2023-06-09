@@ -38,10 +38,10 @@ CREATE TABLE BACKUP_U_TBL(
     CHECK_EMAIL_RX  CHAR(1) DEFAULT 'N'     NOT NULL,
     U_GRADE         CHAR(1) DEFAULT 0       NOT NULL,
     U_PTS           NUMBER DEFAULT 0        NOT NULL,
-    DROP_DATE       DATE DEFAULT SYSDATE    NOT NULL
+    BACKUP_U_DATE       DATE DEFAULT SYSDATE    NOT NULL
 );
 
--- 회원 탈퇴 트리거
+-- 회원 탈퇴 백업 트리거
 CREATE OR REPLACE TRIGGER tr_backup_u_tbl
 AFTER DELETE ON u_tbl
 FOR EACH ROW
@@ -418,6 +418,90 @@ ORDER BY c.categ_name;
 
 -- 월별
 
+-- 재고 트리거
+-- 재고 0 되면 품절
+CREATE OR REPLACE TRIGGER tr_od_insert_p
+AFTER INSERT ON od_tbl
+FOR EACH ROW
+    DECLARE
+        check_purchasable NUMBER;
+    BEGIN
+        SELECT p_amt into check_purchasable
+        FROM p_tbl
+        WHERE p_no = :NEW.p_no;
+    IF check_purchasable > :NEW.od_amt THEN
+        UPDATE
+            p_tbl
+        SET
+            p_amt = p_amt - :NEW.od_amt
+        WHERE
+            p_no = :NEW.p_no;
+    END IF;
+    IF check_purchasable = :NEW.od_amt THEN
+        UPDATE
+            p_tbl
+        SET
+            p_amt = p_amt - :NEW.od_amt,
+            p_purchasable = 'N'
+        WHERE
+            p_no = :NEW.p_no;
+    END IF;
+    IF check_purchasable < :NEW.od_amt THEN
+    RAISE_APPLICATION_ERROR(-20001, '재고가 부족합니다.');
+    END IF;
+END tr_od_insert_p;
+
+-- 주문 취소시 재고 수정
+CREATE OR REPLACE TRIGGER tr_od_delete_p
+AFTER DELETE ON od_tbl
+FOR EACH ROW
+    DECLARE
+        check_purchasable NUMBER;
+        if_purchasable CHAR(1);
+    BEGIN
+        SELECT p_amt, p_purchasable into check_purchasable, if_purchasable
+        FROM p_tbl
+        WHERE p_no = :OLD.p_no;
+    IF DELETING THEN
+        UPDATE
+            p_tbl
+        SET
+            p_amt = p_amt + :OLD.od_amt
+        WHERE
+            p_no = :OLD.p_no;
+    END IF;
+    IF check_purchasable = 0 AND
+    if_purchasable = 'N' AND
+    :OLD.od_amt > 0 THEN
+        UPDATE
+            p_tbl
+        SET
+            p_purchasable = 'Y'
+        WHERE
+            p_no = :OLD.p_no;
+    END IF;
+END tr_od_delete_p;
+
+-- 주문 상세 백업 테이블
+DROP TABLE BACKUP_OD_TBL CASCADE CONSTRAINTS;
+CREATE TABLE BACKUP_OD_TBL(
+    ORD_NO  NUMBER,
+    P_NO    NUMBER,
+    OD_AMT  NUMBER  NOT NULL,
+    OD_PX  NUMBER  NOT NULL,
+    BACKUP_OD_DATE  DATE DEFAULT SYSDATE
+);
+
+-- 주문 취소 백업 트리거
+CREATE OR REPLACE TRIGGER tr_backup_od_tbl
+AFTER DELETE ON od_tbl
+FOR EACH ROW
+    BEGIN
+    IF DELETING THEN
+        INSERT INTO backup_od_tbl(ord_no, p_no, od_amt, od_px)
+        VALUES (:OLD.ord_no, :OLD.p_no, :OLD.od_amt, :OLD.od_px);
+    END IF;
+END tr_backup_od_tbl;
 
 -- 7. 게시판 테이블
 DROP TABLE BRD_TBL CASCADE CONSTRAINTS;

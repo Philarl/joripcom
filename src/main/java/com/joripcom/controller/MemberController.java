@@ -110,7 +110,11 @@ public class MemberController {
 				session.setAttribute("loginStatus", member);
 				
 				memberService.now_visit(member.getU_id());
-				url = "/";
+				
+				// 강제로 로그인 되기 이전 매핑주소와 정보 존재유무 작업
+				String targetUrl = (String) session.getAttribute("dest");
+				
+				url = (targetUrl != null) ? targetUrl : "/";
 				
 				//찜 목록 할인 상품 체크
 				int check_fav_dc = memberService.check_fav_dc(member.getU_id());
@@ -174,7 +178,11 @@ public class MemberController {
 			session.setAttribute("loginStatus", member);
 			session.setAttribute("kakaoLoginStatus", member);
 			memberService.now_visit(kakao_id);
-			url = "/";
+			
+			// 강제로 로그인 되기 이전 매핑주소와 정보 존재유무 작업
+			String targetUrl = (String) session.getAttribute("dest");
+			
+			url = (targetUrl != null) ? targetUrl : "/";
 			
 			int check_fav_dc = memberService.check_fav_dc(kakao_id);
 			

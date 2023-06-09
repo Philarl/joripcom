@@ -149,7 +149,7 @@
       <td class="align-middle">상태</td>
       <td class="align-middle">배송료</td>
       <td class="align-middle">
-        <button type="button" name="btn_order_product_del" data-p_no="{{p_no}}" data-od_px="od_px" data-od_amt="od_amt" class="btn btn-link">Delete</button>
+        <button type="button" name="btn_order_product_del" data-p_no="{{p_no}}" data-od_px="{{od_px}}" data-od_amt="{{od_amt}}" class="btn btn-link">Delete</button>
       </td>
     </tr>
     {{/each}}
@@ -190,29 +190,29 @@
   });
 
   // 주문 상세 내역에서 삭제 클릭
-  // TODO : 주문상세 상품 삭제 작업
   $("div#modalDetailView").on("click", "button[name='btn_order_product_del']", function() {
 
     if(!confirm("주문상세 상품을 삭제하시겠습니까?")) return;
-    let od_px = 0;
-    let od_amt = 0;
 
     let cur_row = $(this).parent().parent();
 
     let p_no = $(this).data("p_no");
     let ord_no = $(this).parent().parent().find("input[name='ord_no']").val();
-    od_px = parseInt((this).data("od_px"));
-    od_amt = parseInt($(this).data("od_amt"));
+    let od_px = $(this).data("od_px");
+    let od_amt = $(this).data("od_amt");
 
     // console.log("상품번호: " + p_no);
     // console.log("주문번호: " + ord_no);
+    // console.log("주문량: " + od_px);
+    // console.log("주문금액: " + od_amt);
 
     $.ajax({
       url: '/admin/order/order_detail_product_delete',
       type: 'post',
       data: {ord_no : ord_no, p_no : p_no, od_px : od_px, od_amt : od_amt},
       dataType: 'text',
-      success: function() {
+      success: function(result) {
+        // console.log("결과" + result);
         if(result == 'success') {
           alert("주문상품이 삭제되었습니다.");
           cur_row.remove();
