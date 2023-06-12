@@ -429,25 +429,26 @@ FOR EACH ROW
         SELECT p_amt into check_purchasable
         FROM p_tbl
         WHERE p_no = :NEW.p_no;
-    IF check_purchasable > :NEW.od_amt THEN
-        UPDATE
-            p_tbl
-        SET
-            p_amt = p_amt - :NEW.od_amt
-        WHERE
-            p_no = :NEW.p_no;
-    END IF;
-    IF check_purchasable = :NEW.od_amt THEN
-        UPDATE
-            p_tbl
-        SET
-            p_amt = p_amt - :NEW.od_amt,
-            p_purchasable = 'N'
-        WHERE
-            p_no = :NEW.p_no;
-    END IF;
     IF check_purchasable < :NEW.od_amt THEN
     RAISE_APPLICATION_ERROR(-20001, '재고가 부족합니다.');
+    ELSE
+        IF check_purchasable > :NEW.od_amt THEN
+            UPDATE
+                p_tbl
+            SET
+                p_amt = p_amt - :NEW.od_amt
+            WHERE
+                p_no = :NEW.p_no;
+        END IF;
+        IF check_purchasable = :NEW.od_amt THEN
+            UPDATE
+                p_tbl
+            SET
+                p_amt = p_amt - :NEW.od_amt,
+                p_purchasable = 'N'
+            WHERE
+                p_no = :NEW.p_no;
+        END IF;
     END IF;
 END tr_od_insert_p;
 
