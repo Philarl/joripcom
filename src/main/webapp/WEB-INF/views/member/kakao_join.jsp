@@ -77,7 +77,7 @@
 		                    <label for="u_name">이름</label>
 		                    <input type="text" class="form-control" name="u_name" id="u_name">
 		                    <input type="hidden" class="form-control" name="u_id" id="u_id" value="${kakao_id }">
-		                    <input type="hidden" class="form-control" name="u_pw" id="u_pw" value="${kakao_id }">
+		                    <input type="hidden" class="form-control" name="u_pw" id="u_pw" value="${kakao_pw }">
 	                    </div>
 	                  	<div class="col-md-4 mb-3">
 		                    <label for="u_phone">전화번호</label>

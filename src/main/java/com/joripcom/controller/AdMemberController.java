@@ -39,7 +39,7 @@ public class AdMemberController {
 	
 	@GetMapping("/drop_list")
 	public void dropList(@ModelAttribute("cri") Criteria cri, @ModelAttribute("sDate") String sDate, @ModelAttribute("eDate") String eDate, Model model) {
-		List<DropVO> dropList = adMemberService.dropList(cri, sDate, eDate);
+		List<MemberVO> dropList = adMemberService.dropList(cri, sDate, eDate);
 		model.addAttribute("dropList", dropList);
 		int total = adMemberService.getTotalCount(cri, sDate, eDate);
 		model.addAttribute("pageMaker", new PageDTO(total, cri));

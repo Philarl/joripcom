@@ -14,7 +14,7 @@ public interface AdMemberMapper {
 	//회원 숫자
 	int getTotalCount(@Param("cri") Criteria cri, @Param("sDate") String sDate, @Param("eDate") String eDate);
 	//탈퇴 회원 목록
-	List<DropVO> dropList(@Param("cri") Criteria cri, @Param("sDate") String sDate, @Param("eDate") String eDate);
+	List<MemberVO> dropList(@Param("cri") Criteria cri, @Param("sDate") String sDate, @Param("eDate") String eDate);
 	// 탈퇴 회원 숫자
 	int getTotalDropCount(@Param("cri") Criteria cri, @Param("sDate") String sDate, @Param("eDate") String eDate);
 }

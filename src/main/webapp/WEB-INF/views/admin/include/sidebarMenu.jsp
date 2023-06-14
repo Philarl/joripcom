@@ -38,7 +38,7 @@
         </a>
         <div class="nav-item dropdown-menu">
           <a class="nav-link dropdown-item" href="/admin/member/member_list">회원목록</a>
-          <!-- <a class="nav-link dropdown-item" href="/admin/member/drop_list">탈퇴회원목록</a> -->
+          <a class="nav-link dropdown-item" href="/admin/member/drop_list">탈퇴회원목록</a>
         </div>
       </li>
       <li class="nav-item dropdown">

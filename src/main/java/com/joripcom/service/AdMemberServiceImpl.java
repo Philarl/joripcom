@@ -31,7 +31,7 @@ public class AdMemberServiceImpl implements AdMemberService {
 	}
 
 	@Override
-	public List<DropVO> dropList(Criteria cri, String sDate, String eDate) {
+	public List<MemberVO> dropList(Criteria cri, String sDate, String eDate) {
 		
 		return adMemberMapper.dropList(cri, sDate, eDate);
 	}

@@ -73,6 +73,7 @@
                       <button type="submit" class="btn btn-success">검색</button>
                     </div>
                     <div class="col-md-3">
+                  		<button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
                       <button type="button" id="btn_checkedDelete" class="btn btn-primary">선택상품삭제</button>
                     </div>
                   </div>
@@ -123,10 +124,7 @@
               <!-- /.box-body -->
               <!-- [이전] 1 2 3 4 5 [다음] 출력작업 -->
               <div class="box-footer clearfix row">
-                <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" id="btn_productInsert">상품 등록</button>
-                </div>
-                <div class="col-md-11">
+                <div class="col-md-12">
                   <ul class="pagination justify-content-end">
                     <c:if test="${pageMaker.prev }">
                       <li class="page-item"><a class="page-link" href="${pageMaker.startPage - 1}">[prev]</a></li>

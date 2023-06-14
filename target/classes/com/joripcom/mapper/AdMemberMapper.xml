@@ -25,7 +25,7 @@
 	<sql id="sDropDate">
 		<if test="sDate != null and !sDate.equals('')">
 		<![CDATA[
-			drop_date >= to_date(#{sDate})
+			backup_u_date >= to_date(#{sDate})
 			and
 			]]>
 		</if>
@@ -34,7 +34,7 @@
 	<sql id="eDropDate">
 		<if test="eDate != null and !eDate.equals('')">
 		<![CDATA[
-			drop_date < to_date(#{eDate}) + 1
+			backup_u_date < to_date(#{eDate}) + 1
 			and
 			]]>
 		</if>
@@ -85,14 +85,14 @@
 			u_id IS NOT NULL
 	</select>
 	
-	<select id="dropList" resultType="com.joripcom.domain.DropVO">
+	<select id="dropList" resultType="com.joripcom.domain.MemberVO">
 		SELECT
-			RN, u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts, drop_date
+			RN, u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts, backup_u_date
 		FROM (
 				SELECT /*+INDEX_ASC(udrop_tbl pk_udrop_id) */
-						ROWNUM RN, u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts, drop_date
+						ROWNUM RN, u_id, u_name, u_pw, u_email, u_zipcode, u_addr, u_addr_dtl, u_phone, u_nic, check_email_rx, u_grade, u_pts, backup_u_date
 				FROM
-					ord_tbl
+					backup_u_tbl
 				WHERE
 					<include refid="sDropDate" />
 					<include refid="eDropDate" />
@@ -108,7 +108,7 @@
 		SELECT
 			count(*)
 		FROM
-			udrop_tbl
+			backup_u_tbl
 		WHERE
 			<include refid="sDropDate" />
 			<include refid="eDropDate" />

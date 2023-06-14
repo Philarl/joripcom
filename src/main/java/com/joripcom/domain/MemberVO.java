@@ -45,5 +45,7 @@ public class MemberVO {
 	private Date join_date;
 	private Date modify_date;
 	private Date last_login_date;
+	
+	private Date backup_u_date;
 
 }

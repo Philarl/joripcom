@@ -167,12 +167,19 @@ public class MemberController {
 //		log.info("유저 정보 : " + dto);
 		
 		String kakao_id = dto.getId().toString();
+		String pw = "";
+		for(int i=0; i<6; i++) {
+			pw += String.valueOf((int)(Math.random() * 10));
+		}
+		String kakao_pw = passwordEncoder.encode(pw);
 //		log.info("카카오아이디 : " + kakao_id);
 		
 		String url = "";
 		if(memberService.idCheck(kakao_id) == null ) {
 			url = "/member/kakao_join";
-			rttr.addAttribute("kakao_id", kakao_id);
+			rttr.addFlashAttribute("kakao_id", kakao_id);
+			rttr.addFlashAttribute("kakao_pw", kakao_pw);
+//			log.info("카카오아이디 없음 : " + kakao_id);
 		}else {
 			MemberVO member = memberService.login(kakao_id);
 			session.setAttribute("loginStatus", member);

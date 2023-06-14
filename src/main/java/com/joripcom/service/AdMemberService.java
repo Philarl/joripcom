@@ -12,7 +12,7 @@ public interface AdMemberService {
 
 	int getTotalCount(Criteria cri, String sDate, String eDate);
 
-	List<DropVO> dropList(Criteria cri, String sDate, String eDate);
+	List<MemberVO> dropList(Criteria cri, String sDate, String eDate);
 
 	int getTotalDropCount(Criteria cri, String sDate, String eDate);
 
